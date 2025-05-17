@@ -1,0 +1,73 @@
+# ARK Ascended UI Detection Dataset Configuration
+path: ./dataset_yolo  # Dataset root directory
+train: train/images   # Train images (relative to 'path')
+val: val/images       # Val images (relative to 'path')
+
+# Class names
+names:
+  0: health_bar
+  1: stamina_bar
+  2: food_bar
+  3: water_bar
+  4: weight_bar
+  5: oxygen_bar
+  6: torpidity_bar
+  7: xp_bar
+  8: level_icon
+  9: starvation_alert
+  10: dehydration_alert
+  11: overweight_alert
+  12: level_alert
+  13: death_message
+  14: tribe_message
+  15: inventory_slot
+  16: inventory_item
+  17: item_stack_count
+  18: item_durability
+  19: search_bar
+  20: weight_indicator
+  21: transfer_all
+  22: drop_item
+  23: item_name
+  24: item_description
+  25: craftable_label
+  26: blueprint_label
+  27: engram_label
+  28: inventory_tab
+  29: crafting_tab
+  30: engram_tab
+  31: cosmetics_tab
+  32: tribe_tab
+  33: structure_tab
+  34: map_marker
+  35: player_location
+  36: beacon_marker
+  37: bed_marker
+  38: waypoint
+  39: back_button
+  40: close_button
+  41: option_button
+  42: craft_button
+  43: learn_button
+  44: unlock_button
+  45: transfer_button
+  46: taming_bar
+  47: breeding_bar
+  48: creature_stats
+  49: creature_inventory
+  50: imprint_icon
+  51: structure_health
+  52: structure_name
+  53: storage_label
+  54: fuel_indicator
+  55: power_indicator
+  56: compass
+  57: hotbar
+  58: extended_hotbar
+  59: emote_wheel
+  60: whistle_menu
+  61: tek_element
+  62: cryopod_menu
+  63: tek_transmitter
+  64: obelisk_terminal
+  65: mission_terminal
