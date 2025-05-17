@@ -1,0 +1,68 @@
+# ARK: Survival Ascended UI Automation Configuration
+
+# Detection settings
+detection:
+  confidence: 0.4             # Default confidence threshold
+  memory_timeout: 1.0         # Seconds before UI memory is considered stale
+  cooldown: 0.5               # Seconds between actions
+  background_detection: false # Whether to run detection in background
+  detection_interval: 0.2     # Seconds between background detections
+
+# Game settings
+game:
+  # Key bindings - matches ARK's default controls
+  keys:
+    inventory: 'i'
+    map: 'm'
+    drop: 'o'
+    use: 'e'
+    attack: 'left_mouse'
+    alt_attack: 'right_mouse'
+    crouch: 'c'
+    prone: 'x'
+    jump: 'space'
+    sprint: 'shift'
+    whistle: 't'
+    
+  # UI interaction settings
+  ui:
+    click_delay: 0.1          # Delay after clicking
+    drag_duration: 0.3        # Duration of drag operations
+    double_click_interval: 0.2 # Interval between clicks for double-click
+
+# Automation behavior
+behavior:
+  max_retries: 3              # Maximum retries for actions
+  auto_close_inventory: true  # Automatically close inventory when done
+  verbose_logging: true       # Enable detailed logging
+  wait_timeout: 10            # Default timeout for wait operations
+  safety_checks: true         # Enable safety checks (preventing harmful actions)
+
+# OCR settings
+ocr:
+  engine: 'auto'              # OCR engine to use (auto, tesseract, easyocr)
+  preprocess_type: 'ark_ui'   # Image preprocessing type for OCR
+
+# Scenarios
+scenarios:
+  taming:
+    narcotic_interval: 600    # Seconds between narcotic applications
+    food_interval: 300        # Seconds between food additions
+    check_interval: 5         # Seconds between status checks
+    
+  crafting:
+    wait_time: 3              # Seconds to wait for crafting to complete
+    auto_learn_engrams: true  # Automatically learn engrams when crafting
+    
+  resource_gathering:
+    look_interval: 1.0        # Seconds between looking around
+    gather_attempts: 5        # Number of gathering attempts before moving
+    movement_duration: 0.8    # Duration of movement actions
+
+# Advanced settings
+advanced:
+  screenshot_method: 'mss'    # Screenshot method (mss, pyautogui)
+  threading_enabled: true     # Enable multi-threading support
+  debug_mode: false           # Enable debug mode
+  save_screenshots: false     # Save screenshots during automation
+  screenshot_dir: "debug_screenshots" # Directory for debug screenshots

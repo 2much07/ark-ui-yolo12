@@ -1,4 +1,3 @@
-```python
 """
 ARK Taming Assistant Example
 This script demonstrates how to use the ArkUIAutomation class to assist with taming creatures in ARK: Survival Ascended.

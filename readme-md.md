@@ -2,12 +2,19 @@
 
 A complete solution for detecting and automating UI interactions in ARK: Survival Ascended using YOLOv8 object detection.
 
+## Overview
+
+This project consists of two main components:
+
+1. **YOLOv8 UI Detector**: Train a custom YOLOv8 model to detect UI elements in ARK: Survival Ascended.
+2. **Automation System**: Use the trained model to automate game tasks by interacting with the detected UI elements.
+
 ## Quick Start Guide
 
 ### 1. Install Requirements
 
 ```bash
-pip install ultralytics opencv-python pyautogui mss keyboard numpy pyyaml
+pip install -r requirements.txt
 ```
 
 ### 2. Collect Training Data
@@ -44,13 +51,6 @@ python automation/detection_visualizer.py --weights runs/ark_ui_detector_*/weigh
 python automation/run_automation.py --script inventory_manager --weights runs/ark_ui_detector_*/weights/best.pt
 ```
 
-## Overview
-
-This project consists of two main components:
-
-1. **YOLOv8 UI Detector**: Train a custom YOLOv8 model to detect UI elements in ARK: Survival Ascended.
-2. **Automation System**: Use the trained model to automate game tasks by interacting with the detected UI elements.
-
 ## Features
 
 - **Screenshot Collection** - Automatically capture gameplay screenshots for training
@@ -66,15 +66,41 @@ This project consists of two main components:
 
 ## Project Structure
 
-- `1_collect_screenshots.py` - Tool to capture gameplay screenshots
-- `2_annotate_instructions.md` - Guide for labeling UI elements
-- `3_prepare_dataset.py` - Script to organize your dataset for training
-- `4_train_model.py` - YOLOv8 training script
-- `model_config.yaml` - YOLOv8 configuration
-- `detection_visualizer.py` - Real-time visualization tool
-- `ark_ui_automation.py` - Core automation class
-- `inventory_manager.py` - Example automation script
-- `run_automation.py` - Automation script launcher
+```
+ark_ui_master/
+├── README.md                           # Project overview and instructions
+├── requirements.txt                    # Dependencies for both projects
+├── setup.py                            # Installation script
+│
+├── training/                           # YOLOv8 training pipeline
+│   ├── 1_screenshot_collector.py       # Screenshot collection script
+│   ├── 2_annotate_instructions.md      # Annotation guidelines
+│   ├── 3_dataset_preparation.py        # Dataset organization script
+│   ├── 4_train_model.py                # YOLOv8 training script
+│   ├── 5_evaluate_model.py             # Model evaluation script
+│   ├── 6_model_updater.py              # Model updating script
+│   └── config/                         # Configuration files
+│       ├── ark_ui_data.yaml            # Dataset configuration
+│       └── model_config.yaml           # YOLOv8 model configuration
+│
+├── automation/                         # ARK UI Automation System
+│   ├── ark_ui_automation.py            # Main automation class
+│   ├── detection_visualizer.py         # Real-time UI visualization tool
+│   ├── run_automation.py               # Automation script launcher
+│   ├── examples/                       # Example automation scripts
+│   │   ├── inventory_manager.py        # Inventory management example
+│   │   ├── crafting_helper.py          # Crafting automation example
+│   │   ├── taming_assistant.py         # Taming helper example
+│   │   └── resource_gatherer.py        # Resource gathering example
+│   └── config/                         # Automation configuration
+│       └── automation_config.yaml      # Automation settings
+│
+└── utils/                              # Shared utilities
+    ├── dataset_utils.py                # Dataset management utilities
+    ├── visualization.py                # Visualization utilities
+    ├── ark_ui_classes.py               # ARK UI class definitions
+    └── screenshot_utils.py             # Screenshot processing utilities
+```
 
 ## Installation
 
@@ -89,8 +115,8 @@ This project consists of two main components:
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/ark-ui-detector.git
-cd ark-ui-detector
+git clone https://github.com/yourusername/ark-ui-master.git
+cd ark-ui-master
 ```
 
 2. **Create a virtual environment**
@@ -120,8 +146,8 @@ pip install -r requirements.txt
    - Train the model with your custom dataset
 
 2. **Create custom automation scripts**:
-   - Use `inventory_manager.py` as a template
-   - Create new scripts in the `examples` folder
+   - Use the example scripts as templates
+   - Create new scripts in the `automation/examples` folder
    - Run them with `run_automation.py`
 
 ## Available Automation Scripts
@@ -247,12 +273,6 @@ python training/6_model_updater.py --weights your_best_model.pt --data config/ar
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Notes
-
-- For best results, use screenshots from your specific game configuration (resolution, UI scale)
-- This system is designed for education and experimentation purposes only
-- Always ensure automation complies with the game's terms of service
 
 ## Disclaimer
 
