@@ -1,0 +1,58 @@
+# Create a .gitignore file
+cat > .gitignore << 'EOL'
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+ark_env/
+venv/
+ENV/
+
+# Dataset and Model files
+dataset/
+dataset_yolo/
+runs/
+
+# Logs
+*.log
+logs/
+ark_automation.log
+
+# Screenshots
+detection_screenshots/
+screenshots/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+EOL
+
+# Add and commit the .gitignore file
+git add .gitignore
+git commit -m "Add .gitignore file"
+git push
