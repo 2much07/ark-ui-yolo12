@@ -1,73 +1,602 @@
-# ARK Ascended UI Detection Dataset Configuration
+# ARK Ascended UI Detection Dataset Configuration - ENHANCED SUPER COMPLETE VERSION
 path: ./dataset_yolo  # Dataset root directory
 train: train/images   # Train images (relative to 'path')
 val: val/images       # Val images (relative to 'path')
 
 # Class names
 names:
-  0: health_bar
-  1: stamina_bar
-  2: food_bar
-  3: water_bar
-  4: weight_bar
-  5: oxygen_bar
-  6: torpidity_bar
-  7: xp_bar
-  8: level_icon
-  9: starvation_alert
-  10: dehydration_alert
-  11: overweight_alert
-  12: level_alert
-  13: death_message
-  14: tribe_message
-  15: inventory_slot
-  16: inventory_item
-  17: item_stack_count
-  18: item_durability
-  19: search_bar
-  20: weight_indicator
-  21: transfer_all
-  22: drop_item
-  23: item_name
-  24: item_description
-  25: craftable_label
-  26: blueprint_label
-  27: engram_label
-  28: inventory_tab
-  29: crafting_tab
-  30: engram_tab
-  31: cosmetics_tab
-  32: tribe_tab
-  33: structure_tab
-  34: map_marker
-  35: player_location
-  36: beacon_marker
-  37: bed_marker
-  38: waypoint
-  39: back_button
-  40: close_button
-  41: option_button
-  42: craft_button
-  43: learn_button
-  44: unlock_button
-  45: transfer_button
-  46: taming_bar
-  47: breeding_bar
-  48: creature_stats
-  49: creature_inventory
-  50: imprint_icon
-  51: structure_health
-  52: structure_name
-  53: storage_label
-  54: fuel_indicator
-  55: power_indicator
-  56: compass
-  57: hotbar
-  58: extended_hotbar
-  59: emote_wheel
-  60: whistle_menu
-  61: tek_element
-  62: cryopod_menu
-  63: tek_transmitter
-  64: obelisk_terminal
-  65: mission_terminal
+  # Basic UI Structural Elements (0-9)
+  0: ui_panel_background          # Base panel background
+  1: ui_panel_border              # Panel border/frame
+  2: ui_scrollbar                 # Scrollbar element
+  3: ui_scrollbar_handle          # Scrollbar drag handle
+  4: ui_divider                   # Visual divider between sections
+  5: ui_highlight                 # Currently selected element highlight
+  6: ui_dropdown_arrow            # Dropdown menu arrow indicator
+  7: ui_checkbox_empty            # Unchecked checkbox
+  8: ui_checkbox_filled           # Checked checkbox
+  9: ui_slider                    # Slider control element
+  
+  # Main HUD Elements (10-24)
+  10: hud_compass                 # Top compass
+  11: hud_hotbar                  # Bottom hotbar
+  12: hud_crosshair               # Aiming crosshair
+  13: hud_interaction_prompt      # "Press E to interact" text
+  14: hud_whistle_wheel           # Dino whistle command wheel
+  15: hud_emote_wheel             # Player emote wheel
+  16: hud_quickchat_wheel         # Quick chat wheel
+  17: hud_extended_ui_toggle      # Toggle for extended UI
+  18: hud_chat_box                # Chat message display area
+  19: hud_chat_input              # Chat text input field
+  20: hud_tribe_log_popup         # Tribe log popup notification
+  21: hud_gps_coordinates         # GPS coordinates display
+  22: hud_temperature_display     # Current temperature display
+  23: hud_active_buffs            # Active status effects/buffs
+  24: hud_active_debuffs          # Active negative effects/debuffs
+  
+  # Status Indicators (25-49)
+  25: status_health_low           # Health bar when low (critical)
+  26: status_health_medium        # Health bar when medium
+  27: status_health_full          # Health bar when full/high
+  28: status_stamina_low          # Stamina bar when low
+  29: status_stamina_medium       # Stamina bar when medium
+  30: status_stamina_full         # Stamina bar when full
+  31: status_food_low             # Food bar when low
+  32: status_food_medium          # Food bar when medium
+  33: status_food_full            # Food bar when full
+  34: status_water_low            # Water bar when low
+  35: status_water_medium         # Water bar when medium
+  36: status_water_full           # Water bar when full
+  37: status_weight_low           # Weight when low (mostly empty)
+  38: status_weight_medium        # Weight when medium
+  39: status_weight_heavy         # Weight when high/encumbered
+  40: status_torpor_low           # Torpidity bar when low
+  41: status_torpor_medium        # Torpidity bar when medium
+  42: status_torpor_high          # Torpidity bar when high
+  43: status_xp_gained            # XP gain popup/notification
+  44: status_level_up_available   # Level up indicator
+  45: status_effect_icons         # Status effect icons
+  46: status_oxygen_low           # Oxygen bar when low
+  47: status_oxygen_medium        # Oxygen bar when medium
+  48: status_oxygen_full          # Oxygen bar when full
+  49: status_fortitude_indicator  # Fortitude status indicator
+  
+  # Alert Messages (50-69)
+  50: alert_starvation            # Starvation warning
+  51: alert_dehydration           # Dehydration warning
+  52: alert_encumbered            # Too heavy/encumbered warning
+  53: alert_too_hot               # Temperature too hot warning
+  54: alert_too_cold              # Temperature too cold warning
+  55: alert_level_up              # Level up notification
+  56: alert_tribe_message         # Tribe notification
+  57: alert_death_message         # Death screen text
+  58: alert_taming_complete       # Taming completed notification
+  59: alert_insufficient_engrams  # Not enough engram points
+  60: alert_structure_blocked     # Structure placement blocked
+  61: alert_enemy_player_nearby   # Enemy player nearby warning
+  62: alert_server_message        # Server announcement
+  63: alert_disconnection_warning # Server disconnection warning
+  64: alert_item_broken           # Item broken notification
+  65: alert_creature_starving     # Creature starving warning
+  66: alert_creature_dying        # Creature low health warning
+  67: alert_imprint_available     # Imprinting available notification
+  68: alert_gasoline_low          # Generator low fuel warning
+  69: alert_element_low           # Tek structure low element warning
+  
+  # Player Inventory - Left Side (70-99)
+  70: player_inventory_title      # "Inventory" title text
+  71: player_inventory_slot_empty # Empty inventory slot
+  72: player_inventory_slot_filled # Filled inventory slot
+  73: player_item_icon            # Item in player inventory
+  74: player_item_stack_count     # Stack count number
+  75: player_item_durability_high # Item durability bar (high)
+  76: player_item_durability_med  # Item durability bar (medium)
+  77: player_item_durability_low  # Item durability bar (low/critical)
+  78: player_search_bar           # Inventory search field
+  79: player_weight_current       # Current weight number
+  80: player_weight_max           # Maximum weight number
+  81: player_weight_slider        # Weight slider/visual indicator
+  82: player_transfer_all_button  # Transfer all items button (right arrow)
+  83: player_drop_item_button     # Drop item button
+  84: player_character_model      # 3D character model
+  85: player_armor_slot_head      # Head armor slot
+  86: player_armor_slot_chest     # Chest armor slot
+  87: player_armor_slot_gloves    # Gloves armor slot
+  88: player_armor_slot_legs      # Legs armor slot
+  89: player_armor_slot_feet      # Feet armor slot
+  90: player_armor_slot_shield    # Shield slot
+  91: player_quick_bar_slot       # Hotbar quick slot assignment
+  92: player_sort_button          # Sort inventory button
+  93: player_filter_button        # Filter inventory button
+  94: player_folder_tab           # Folder/category tab
+  95: player_folder_item_count    # Item count in folder
+  96: player_blueprint_icon       # Blueprint icon overlay
+  97: player_item_equipped_marker # Equipped item indicator
+  98: player_item_favorite_marker # Favorited item indicator
+  99: player_quick_access_bar     # Quick access bar
+  
+  # Entity Inventory - Right Side (100-129)
+  100: entity_inventory_title     # Entity name title text
+  101: entity_inventory_slot_empty # Empty entity inventory slot
+  102: entity_inventory_slot_filled # Filled entity inventory slot
+  103: entity_item_icon           # Item in entity inventory
+  104: entity_item_stack_count    # Stack count in entity inventory
+  105: entity_item_durability     # Item durability in entity inventory
+  106: entity_search_bar          # Entity inventory search field
+  107: entity_weight_current      # Entity current weight number
+  108: entity_weight_max          # Entity maximum weight number
+  109: entity_weight_slider       # Entity weight slider/indicator
+  110: entity_transfer_all_button # Transfer all to player button (left arrow)
+  111: entity_drop_item_button    # Drop item from entity button
+  112: entity_model               # Entity 3D model (if shown)
+  113: structure_name             # Structure name title
+  114: structure_content_count    # Content count (e.g., "50/100")
+  115: dino_name                  # Dinosaur name title
+  116: dino_level                 # Dinosaur level display
+  117: dino_stats_button          # View dinosaur stats button
+  118: dino_inventory_button      # View dinosaur inventory button
+  119: dino_behavior_setting      # Dinosaur behavior setting
+  120: dino_following_setting     # Dinosaur following setting
+  121: dino_options_button        # Dinosaur options button
+  122: dino_saddle_slot           # Dinosaur saddle slot
+  123: dino_armor_slot            # Dinosaur armor slot
+  124: structure_power_indicator  # Structure power indicator (on/off)
+  125: structure_fuel_level       # Structure fuel level indicator
+  126: structure_options_button   # Structure options button
+  127: remote_use_button          # Remote use/access button
+  128: remote_inventory_button    # Remote inventory button
+  129: transfer_to_container_text # "Transfer to [container]" text
+  
+  # Item Tooltip & Details (130-154)
+  130: item_tooltip_background    # Item tooltip background panel
+  131: item_tooltip_title         # Item name in tooltip
+  132: item_tooltip_description   # Item description text
+  133: item_tooltip_weight        # Item weight value
+  134: item_tooltip_durability    # Item durability details
+  135: item_spoil_timer           # Spoilage timer for perishables
+  136: item_tooltip_stats         # Item stats (weapons/armor)
+  137: item_tooltip_requirements  # Item usage requirements
+  138: item_tooltip_engram_req    # Engram requirements for blueprint
+  139: item_tooltip_blueprint     # "Blueprint:" indicator text
+  140: item_tooltip_quality_prim  # Primitive quality indicator
+  141: item_tooltip_quality_common # Common quality indicator
+  142: item_tooltip_quality_rare  # Rare quality indicator
+  143: item_tooltip_quality_epic  # Epic quality indicator
+  144: item_tooltip_quality_legend # Legendary quality indicator
+  145: item_tooltip_quality_asc   # Ascendant quality indicator
+  146: item_tooltip_crafted_by    # "Crafted by:" information
+  147: item_tooltip_repair_cost   # Repair cost information
+  148: item_equip_option          # "Equip" option in context menu
+  149: item_drop_option           # "Drop" option in context menu
+  150: item_transfer_option       # "Transfer" option in context menu
+  151: item_split_option          # "Split Stack" option in context menu
+  152: item_consume_option        # "Consume" option in context menu
+  153: item_rename_option         # "Rename" option in context menu
+  154: item_demolish_timer        # Demolish countdown timer
+  
+  # Crafting & Engrams (155-184)
+  155: craft_button_active        # Craft button when clickable
+  156: craft_button_inactive      # Craft button when unavailable
+  157: crafting_queue_slot_empty  # Empty crafting queue slot
+  158: crafting_queue_slot_occupied # Occupied crafting queue slot
+  159: crafting_progress_bar_idle # Crafting progress bar (idle)
+  160: crafting_progress_bar_active # Crafting progress bar (active)
+  161: required_materials_sufficient # Materials indicator (sufficient)
+  162: required_materials_insufficient # Materials indicator (insufficient)
+  163: blueprint_availability_icon # Blueprint available indicator
+  164: craft_all_button           # "Craft All" button
+  165: craft_one_button           # "Craft 1" button
+  166: crafting_speed_modifier    # Crafting speed modifier display
+  167: engram_points_available    # Available engram points display
+  168: engram_icon_locked         # Locked engram icon
+  169: engram_icon_available      # Available engram icon
+  170: engram_icon_learned        # Learned engram icon
+  171: engram_level_requirement   # Level requirement for engram
+  172: engram_points_cost         # Engram points cost display
+  173: engram_search_bar          # Engram search field
+  174: engram_filter_button       # Engram filter options button
+  175: engram_category_tab        # Engram category tab
+  176: tek_engram_category        # Tek tier engram category
+  177: engram_hide_learned_toggle # Toggle to hide learned engrams
+  178: engram_item_icon           # Engram item preview icon
+  179: learn_button_active        # "Learn" button when active
+  180: learn_button_inactive      # "Learn" button when inactive
+  181: mindwipe_tonic_indicator   # Mindwipe tonic availability
+  182: crafting_station_required  # Required crafting station indicator
+  183: crafting_requirement_met   # Requirement met checkmark
+  184: crafting_requirement_unmet # Requirement unmet X mark
+  
+  # Tab Navigation (185-204)
+  185: inventory_tab              # Inventory tab
+  186: inventory_tab_selected     # Inventory tab when selected
+  187: crafting_tab               # Crafting tab
+  188: crafting_tab_selected      # Crafting tab when selected
+  189: engram_tab                 # Engram tab
+  190: engram_tab_selected        # Engram tab when selected
+  191: character_tab              # Character stats tab
+  192: character_tab_selected     # Character tab when selected
+  193: tribe_tab                  # Tribe management tab
+  194: tribe_tab_selected         # Tribe tab when selected
+  195: structure_tab              # Structure options tab
+  196: structure_tab_selected     # Structure tab when selected
+  197: spawn_map_tab              # Spawn location tab
+  198: spawn_map_tab_selected     # Spawn location tab when selected
+  199: tek_teleport_tab           # Tek teleporter tab
+  200: tek_teleport_tab_selected  # Tek teleporter tab when selected
+  201: cosmetic_tab               # Cosmetics/skins tab
+  202: cosmetic_tab_selected      # Cosmetics tab when selected
+  203: tribute_tab                # Tribute tab
+  204: tribute_tab_selected       # Tribute tab when selected
+  
+  # Map Elements (205-229)
+  205: map_background             # Map background/terrain
+  206: map_player_marker          # Player location marker
+  207: map_tribe_member_marker    # Tribe member marker
+  208: map_tamed_dino_marker      # Tamed dino location marker
+  209: map_bed_marker             # Bed spawn point marker
+  210: map_base_marker            # Base/structure marker
+  211: map_waypoint_marker        # Custom waypoint marker
+  212: map_obelisk_marker         # Obelisk marker
+  213: map_cave_entrance_marker   # Cave entrance marker
+  214: map_beacon_marker          # Drop beacon marker
+  215: map_mission_marker         # Mission start location marker
+  216: map_boss_terminal_marker   # Boss terminal marker
+  217: map_supply_drop_marker     # Supply drop marker
+  218: map_explorer_note_marker   # Explorer note marker
+  219: map_glitch_marker          # Glitch/corruption marker
+  220: map_resource_node_marker   # Resource node marker
+  221: map_charging_station_marker # Charge station marker
+  222: map_ocean_depth_indicator  # Ocean depth coloration
+  223: map_coordinates_display    # Map coordinates display
+  224: map_zoom_in_button         # Map zoom in control
+  225: map_zoom_out_button        # Map zoom out control
+  226: map_filter_button          # Map filter options button
+  227: map_place_waypoint_button  # Place waypoint button
+  228: map_clear_waypoint_button  # Clear waypoint button
+  229: map_region_name_text       # Region/biome name display
+  
+  # Button Elements (230-249)
+  230: button_default             # Standard button
+  231: button_highlighted         # Button when highlighted/hovered
+  232: button_pressed             # Button when pressed
+  233: button_disabled            # Button when disabled
+  234: back_button                # Back/return button
+  235: close_button               # Close/X button
+  236: option_button              # Options/settings button
+  237: accept_button              # Accept/confirm button
+  238: cancel_button              # Cancel button
+  239: pin_button                 # Pin item button
+  240: unpin_button               # Unpin item button
+  241: transfer_button            # Transfer button
+  242: rename_button              # Rename button
+  243: sort_button                # Sort items button
+  244: unclaim_button             # Unclaim dino button
+  245: enable_wandering_button    # Enable wandering button
+  246: disable_wandering_button   # Disable wandering button
+  247: enable_mating_button       # Enable mating button
+  248: disable_mating_button      # Disable mating button
+  249: destroy_button             # Destroy/demolish button
+  
+  # Creature & Taming Elements (250-274)
+  250: taming_progress_bar_empty  # Taming progress bar (empty)
+  251: taming_progress_bar_partial # Taming progress bar (partially filled)
+  252: taming_progress_bar_full   # Taming progress bar (nearly complete)
+  253: taming_effectiveness_high  # Taming effectiveness indicator (high)
+  254: taming_effectiveness_medium # Taming effectiveness indicator (medium)
+  255: taming_effectiveness_low   # Taming effectiveness indicator (low)
+  256: creature_health_bar        # Creature health bar
+  257: creature_stamina_bar       # Creature stamina bar
+  258: creature_food_bar          # Creature food bar
+  259: creature_torpidity_bar     # Creature torpidity bar
+  260: creature_level_text        # Creature level display
+  261: creature_gender_male       # Male gender icon
+  262: creature_gender_female     # Female gender icon
+  263: creature_xp_bar            # Creature XP bar
+  264: maturation_progress_bar    # Baby dino maturation progress
+  265: incubation_progress_bar    # Egg incubation progress
+  266: gestation_progress_bar     # Pregnancy gestation progress
+  267: imprint_icon               # Imprinting icon/indicator
+  268: imprint_progress_bar       # Imprinting progress bar
+  269: imprint_timer              # Time until next imprint
+  270: creature_stat_points       # Available stat points indicator
+  271: creature_stat_increase_button # Stat increase button
+  272: creature_mutation_counter  # Mutation counter
+  273: cryopod_cooldown_timer     # Cryopod cooldown timer
+  274: cryopod_creature_preview   # Creature preview in cryopod
+  
+  # Structure Interface Elements (275-294)
+  275: structure_health_bar       # Structure health bar
+  276: structure_shield_bar       # Tek shield strength bar
+  277: structure_inventory_button # Structure inventory button
+  278: structure_transfer_button  # Transfer to structure button
+  279: structure_options_menu     # Structure options menu
+  280: structure_demolish_option  # Demolish structure option
+  281: structure_pickup_option    # Pick up structure option
+  282: structure_paint_option     # Paint structure option
+  283: structure_change_pin_option # Change pin code option
+  284: structure_snap_points      # Structure snap points
+  285: structure_placement_valid  # Valid placement indicator
+  286: structure_placement_invalid # Invalid placement indicator
+  287: structure_powered_indicator # Powered indicator (green)
+  288: structure_unpowered_indicator # Unpowered indicator (red)
+  289: generator_fuel_level       # Generator fuel level indicator
+  290: electrical_wire_connection # Electrical wire connection point
+  291: water_pipe_connection      # Water pipe connection point
+  292: gas_pipe_connection        # Gas pipe connection point
+  293: storage_capacity_indicator # Storage capacity indicator (e.g., "50/100")
+  294: auto_turret_ammo_indicator # Auto-turret ammunition indicator
+  
+  # Special Menu Interfaces (295-319)
+  295: tek_element_icon           # Tek element resource icon
+  296: tek_teleporter_interface   # Tek teleporter menu
+  297: tek_transmitter_interface  # Tek transmitter menu
+  298: tek_replicator_interface   # Tek replicator crafting menu
+  299: obelisk_interface          # Obelisk terminal interface
+  300: tribute_terminal_interface # Tribute terminal interface
+  301: city_terminal_interface    # City terminal interface 
+  302: mission_terminal_interface # Mission terminal interface
+  303: cryofridge_interface       # Cryofridge storage interface
+  304: cooking_pot_interface      # Cooking pot recipe interface
+  305: industrial_cooker_interface # Industrial cooker interface
+  306: fabricator_interface       # Fabricator crafting interface
+  307: chemistry_bench_interface  # Chemistry bench interface
+  308: tek_cloning_interface      # Tek cloning chamber interface
+  309: tek_dedicated_storage      # Tek dedicated storage interface
+  310: tek_trough_interface       # Tek trough interface
+  311: upload_creature_button     # Upload creature button
+  312: download_creature_button   # Download creature button
+  313: upload_item_button         # Upload item button
+  314: download_item_button       # Download item button
+  315: boss_arena_teleport_button # Boss arena teleport button
+  316: genesis_mission_list       # Genesis mission selection list
+  317: fjordur_realm_portal       # Fjordur realm portal interface
+  318: cave_entrance_transfer     # Cave entrance transfer interface
+  319: ascension_terminal         # Ascension terminal interface
+  
+  # Character Stats Interface (320-339)
+  320: character_stat_health      # Health stat in character menu
+  321: character_stat_stamina     # Stamina stat in character menu
+  322: character_stat_oxygen      # Oxygen stat in character menu
+  323: character_stat_food        # Food stat in character menu
+  324: character_stat_water       # Water stat in character menu
+  325: character_stat_weight      # Weight stat in character menu
+  326: character_stat_melee       # Melee damage stat in character menu
+  327: character_stat_speed       # Movement speed stat in character menu
+  328: character_stat_fortitude   # Fortitude stat in character menu
+  329: character_stat_crafting    # Crafting skill stat in character menu
+  330: character_level_display    # Character level display
+  331: character_xp_bar           # Character XP bar
+  332: character_xp_to_next_level # XP needed for next level
+  333: character_stat_points      # Available stat points counter
+  334: character_stat_increase_button # Stat increase button
+  335: character_total_level_cap  # Total level cap display
+  336: character_ascension_level  # Ascension level indicator
+  337: character_chibi_level      # Chibi-pet level display
+  338: character_mutation_counter # Character mutation counter
+  339: character_mindwipe_reminder # Mindwipe availability reminder
+  
+  # Tribe Interface Elements (340-359)
+  340: tribe_name_display         # Tribe name display
+  341: tribe_rank_display         # Player's tribe rank display
+  342: tribe_member_list          # Tribe member list
+  343: tribe_member_entry         # Individual tribe member entry
+  344: tribe_member_online        # Online tribe member indicator
+  345: tribe_member_offline       # Offline tribe member indicator
+  346: tribe_log_tab              # Tribe log tab
+  347: tribe_log_entry            # Individual tribe log entry
+  348: tribe_alliance_tab         # Tribe alliance management tab
+  349: tribe_governance_tab       # Tribe governance settings tab
+  350: tribe_rank_management      # Tribe rank management interface
+  351: tribe_permissions_setting  # Tribe permissions settings
+  352: tribe_pincode_setting      # Tribe PIN code setting
+  353: tribe_tame_claim_setting   # Tribe tame claiming setting
+  354: tribe_structure_ownership  # Tribe structure ownership setting
+  355: tribe_invitation_button    # Invite to tribe button
+  356: tribe_kick_button          # Remove from tribe button
+  357: tribe_promote_button       # Promote member button
+  358: tribe_demote_button        # Demote member button
+  359: tribe_leave_button         # Leave tribe button
+  
+  # Common Resources (360-399)
+  360: inventory_item_stone       # Stone resource
+  361: inventory_item_wood        # Wood resource
+  362: inventory_item_thatch      # Thatch resource
+  363: inventory_item_fiber       # Fiber resource
+  364: inventory_item_hide        # Hide resource
+  365: inventory_item_metal       # Metal resource
+  366: inventory_item_flint       # Flint resource
+  367: inventory_item_crystal     # Crystal resource
+  368: inventory_item_obsidian    # Obsidian resource
+  369: inventory_item_silica_pearls # Silica Pearls resource
+  370: inventory_item_oil         # Oil resource
+  371: inventory_item_element     # Element resource
+  372: inventory_item_element_shard # Element Shard resource
+  373: inventory_item_element_dust # Element Dust resource
+  374: inventory_item_polymer     # Polymer resource
+  375: inventory_item_organic_polymer # Organic Polymer resource
+  376: inventory_item_cementing_paste # Cementing Paste resource
+  377: inventory_item_chitin      # Chitin resource
+  378: inventory_item_keratin     # Keratin resource
+  379: inventory_item_pelt        # Pelt resource
+  380: inventory_item_electronics # Electronics resource
+  381: inventory_item_gasoline    # Gasoline resource
+  382: inventory_item_metal_ingot # Metal Ingot resource
+  383: inventory_item_narcotics   # Narcotics item
+  384: inventory_item_stimulant   # Stimulant item
+  385: inventory_item_raw_meat    # Raw Meat food
+  386: inventory_item_cooked_meat # Cooked Meat food
+  387: inventory_item_spoiled_meat # Spoiled Meat
+  388: inventory_item_raw_prime   # Raw Prime Meat
+  389: inventory_item_cooked_prime # Cooked Prime Meat
+  390: inventory_item_kibble      # Kibble food
+  391: inventory_item_berry_mejo  # Mejoberry
+  392: inventory_item_berry_narco # Narcoberry
+  393: inventory_item_berry_stim  # Stimberry
+  394: inventory_item_berry_amar  # Amarberry
+  395: inventory_item_berry_azul  # Azulberry
+  396: inventory_item_berry_tinto # Tintoberry
+  397: inventory_item_rare_flower # Rare Flower 
+  398: inventory_item_rare_mushroom # Rare Mushroom
+  399: inventory_item_sap         # Tree Sap
+  
+  # Tools, Weapons & Equipment (400-449)
+  400: inventory_item_stone_pick  # Stone Pickaxe
+  401: inventory_item_stone_hatchet # Stone Hatchet
+  402: inventory_item_metal_pick  # Metal Pickaxe
+  403: inventory_item_metal_hatchet # Metal Hatchet
+  404: inventory_item_spear       # Spear
+  405: inventory_item_pike        # Pike
+  406: inventory_item_bow         # Bow
+  407: inventory_item_crossbow    # Crossbow
+  408: inventory_item_simple_pistol # Simple Pistol
+  409: inventory_item_longneck_rifle # Longneck Rifle
+  410: inventory_item_shotgun     # Shotgun
+  411: inventory_item_fab_rifle   # Fabricated Rifle
+  412: inventory_item_rocket_launcher # Rocket Launcher
+  413: inventory_item_c4_charge   # C4 Explosive
+  414: inventory_item_grappling_hook # Grappling Hook
+  415: inventory_item_parachute   # Parachute
+  416: inventory_item_whip        # Whip
+  417: inventory_item_bola        # Bola
+  418: inventory_item_sickle      # Sickle
+  419: inventory_item_harpoon     # Harpoon Gun
+  420: inventory_item_tranq_arrow # Tranquilizer Arrow
+  421: inventory_item_tranq_dart  # Tranquilizer Dart
+  422: inventory_item_simple_bullet # Simple Bullet
+  423: inventory_item_advanced_bullet # Advanced Rifle Bullet
+  424: inventory_item_shotgun_shell # Shotgun Shell
+  425: inventory_item_flamethrower # Flamethrower
+  426: inventory_item_chainsaw    # Chainsaw
+  427: inventory_item_mining_drill # Mining Drill
+  428: inventory_item_tek_rifle   # Tek Rifle
+  429: inventory_item_tek_sword   # Tek Sword
+  430: inventory_item_tek_grenade # Tek Grenade
+  431: inventory_item_compound_bow # Compound Bow
+  432: inventory_item_sword       # Metal Sword
+  433: inventory_item_shield      # Shield
+  434: inventory_item_waterskin   # Waterskin
+  435: inventory_item_canteen     # Canteen
+  436: inventory_item_spyglass    # Spyglass
+  437: inventory_item_compass     # Compass
+  438: inventory_item_gps         # GPS Device
+  439: inventory_item_radio       # Radio
+  440: inventory_item_gas_collector # Gas Collector
+  441: inventory_item_glider_suit # Glider Suit
+  442: inventory_item_tek_hover_skiff # Tek Hover Skiff
+  443: inventory_item_gas_mask    # Gas Mask
+  444: inventory_item_scuba_mask  # Scuba Mask
+  445: inventory_item_scuba_tank  # Scuba Tank
+  446: inventory_item_fur_armor   # Fur Armor (generic)
+  447: inventory_item_ghillie_armor # Ghillie Armor (generic)
+  448: inventory_item_riot_armor  # Riot Armor (generic)
+  449: inventory_item_tek_armor   # Tek Armor (generic)
+  
+  # Armor & Clothing (450-474)
+  450: inventory_item_cloth_helmet # Cloth Helmet
+  451: inventory_item_cloth_shirt # Cloth Shirt
+  452: inventory_item_cloth_pants # Cloth Pants
+  453: inventory_item_cloth_boots # Cloth Boots
+  454: inventory_item_hide_helmet # Hide Helmet
+  455: inventory_item_hide_chest  # Hide Chestpiece
+  456: inventory_item_hide_pants  # Hide Pants
+  457: inventory_item_hide_boots  # Hide Boots
+  458: inventory_item_chitin_helmet # Chitin Helmet
+  459: inventory_item_chitin_chest # Chitin Chestpiece
+  460: inventory_item_chitin_pants # Chitin Pants
+  461: inventory_item_chitin_boots # Chitin Boots
+  462: inventory_item_flak_helmet # Flak Helmet
+  463: inventory_item_flak_chest  # Flak Chestpiece
+  464: inventory_item_flak_pants  # Flak Pants
+  465: inventory_item_flak_boots  # Flak Boots
+  466: inventory_item_riot_helmet # Riot Helmet
+  467: inventory_item_riot_chest  # Riot Chestpiece
+  468: inventory_item_riot_pants  # Riot Pants
+  469: inventory_item_riot_boots  # Riot Boots
+  470: inventory_item_tek_helmet  # Tek Helmet
+  471: inventory_item_tek_chest   # Tek Chestpiece
+  472: inventory_item_tek_pants   # Tek Pants
+  473: inventory_item_tek_boots   # Tek Boots
+  474: inventory_item_tek_gauntlets # Tek Gauntlets
+  
+  # Structures & Building (475-499)
+  475: inventory_item_thatch_foundation # Thatch Foundation
+  476: inventory_item_wood_foundation # Wood Foundation
+  477: inventory_item_stone_foundation # Stone Foundation
+  478: inventory_item_metal_foundation # Metal Foundation
+  479: inventory_item_tek_foundation # Tek Foundation
+  480: inventory_item_wall        # Wall (generic)
+  481: inventory_item_ceiling     # Ceiling (generic)
+  482: inventory_item_doorframe   # Doorframe (generic)
+  483: inventory_item_door        # Door (generic)
+  484: inventory_item_campfire    # Campfire
+  485: inventory_item_fireplace   # Stone Fireplace
+  486: inventory_item_cooking_pot # Cooking Pot
+  487: inventory_item_mortar_pestle # Mortar and Pestle
+  488: inventory_item_forge       # Refining Forge
+  489: inventory_item_smithy      # Smithy
+  490: inventory_item_fabricator  # Fabricator
+  491: inventory_item_generator   # Electrical Generator
+  492: inventory_item_ind_forge   # Industrial Forge
+  493: inventory_item_ind_grill   # Industrial Grill
+  494: inventory_item_chem_bench  # Chemistry Bench
+  495: inventory_item_storage_box # Storage Box
+  496: inventory_item_large_box   # Large Storage Box
+  497: inventory_item_vault       # Vault
+  498: inventory_item_refrigerator # Refrigerator
+  499: inventory_item_preserving_bin # Preserving Bin
+  
+  # Creature-Related Items (500-519)
+  500: inventory_item_saddle      # Saddle (generic)
+  501: inventory_item_platform_saddle # Platform Saddle (generic)
+  502: inventory_item_tek_saddle  # Tek Saddle (generic)
+  503: inventory_item_cryopod     # Cryopod
+  504: inventory_item_cryopod_filled # Filled Cryopod
+  505: inventory_item_egg         # Creature Egg (generic)
+  506: inventory_item_fert_egg    # Fertilized Egg (generic)
+  507: inventory_item_kibble_basic # Basic Kibble
+  508: inventory_item_kibble_simple # Simple Kibble
+  509: inventory_item_kibble_regular # Regular Kibble
+  510: inventory_item_kibble_superior # Superior Kibble
+  511: inventory_item_kibble_exceptional # Exceptional Kibble
+  512: inventory_item_kibble_extraordinary # Extraordinary Kibble
+  513: inventory_item_breeding_pair # Breeding Pair icon
+  514: inventory_item_imprint_food # Imprint food request item
+  515: inventory_item_leash       # Creature Leash
+  516: inventory_item_creature_finder # Creature Finder
+  517: inventory_item_taxidermy_tool # Taxidermy Tool
+  518: inventory_item_creature_mask # Creature Costume (generic)
+  519: inventory_item_taming_food # Taming Food (generic)
+  
+  # Advanced Elements & Systems (520-539)
+  520: tek_generator_interface    # Tek Generator Interface
+  521: tek_crop_plot_interface    # Tek Crop Plot Interface
+  522: creature_camera_view       # Creature-mounted camera view
+  523: tek_sensor_interface       # Tek Sensor interface
+  524: tek_remote_camera          # Tek Remote Surveillance
+  525: holo_projector_interface   # Holo-Projector interface
+  526: manage_hex_store           # Manage Genesis Hexagon Store
+  527: megachelon_planter         # Megachelon back planter interface
+  528: aquatic_tames_oxygen_interface # Aquatic creature oxygen interface
+  529: genesis_shop_interface     # Genesis HLNA Shop interface
+  530: mission_tracker           # Mission objective tracker
+  531: boss_fight_timer          # Boss fight time remaining
+  532: astrodelphis_energy       # Astrodelphis stardust energy meter
+  533: noglin_brain_jack_interface # Noglin brain-jack interface
+  534: exo_mek_interface         # Exo-Mek control interface
+  535: maewing_baby_milk_meter   # Maewing milk storage meter
+  536: shadowmane_charge_meter   # Shadowmane charge meter
+  537: gacha_crafting_interface  # Gacha item production interface
+  538: stryder_interface         # Stryder harvesting interface
+  539: enforcer_interface        # Enforcer interface
+
+  # Event-Specific UI (540-549)
+  540: holiday_event_interface   # Holiday event UI
+  541: easter_egg_hunt_tracker   # Easter egg hunt progress tracker
+  542: summer_bash_interface     # Summer bash event interface
+  543: fear_evolved_interface    # Fear Evolved event interface
+  544: winter_wonderland_interface # Winter Wonderland interface
+  545: valentines_day_interface  # Valentine's Day event interface
+  546: eggcellent_adventure_ui   # Eggcellent Adventure UI
+  547: genesis_race_timer        # Genesis race mission timer
+  548: genesis_hunt_tracker      # Genesis hunt mission tracker
+  549: genesis_fishing_meter     # Genesis fishing mission meter

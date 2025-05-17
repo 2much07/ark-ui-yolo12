@@ -12,7 +12,7 @@ detection:
 game:
   # Key bindings - matches ARK's default controls
   keys:
-    inventory: 'i'
+    inventory: 'f'
     map: 'm'
     drop: 'o'
     use: 'e'

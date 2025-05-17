@@ -1,5 +1,5 @@
 """
-Train YOLOv8 model for ARK UI Detection.
+Train YOLOv8 model for ARK UI Detection with enhanced support for state-specific UI elements.
 """
 import os
 import yaml
@@ -37,6 +37,28 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_name = f"ark_ui_detector_{timestamp}"
     
+    # Load data.yaml to check class count
+    with open(data_yaml, 'r') as f:
+        data_config = yaml.safe_load(f)
+    
+    num_classes = len(data_config['names'])
+    print(f"Training for {num_classes} classes")
+    
+    # Adjust batch size based on class count
+    batch_size = config.get('batch', 16)
+    if num_classes > 200:
+        suggested_batch = max(4, batch_size // 2)  # Reduce batch size for large class counts
+        print(f"Large class count detected ({num_classes} classes)")
+        print(f"Reducing batch size from {batch_size} to {suggested_batch}")
+        batch_size = suggested_batch
+    
+    # Recommend larger model for large class counts
+    if pretrained_weights is None and num_classes > 300:
+        model_size = model_path.split('yolov8')[1].split('.')[0]
+        if model_size == 's' or model_size == 'n' or model_size == '':
+            print("WARNING: Large class set detected. Consider using a larger model for better performance.")
+            print("For example: yolov8m.pt or yolov8l.pt instead of yolov8s.pt")
+    
     # Load model
     model = YOLO(model_path)
     
@@ -44,7 +66,7 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     train_args = {
         'data': data_yaml,
         'epochs': config.get('epochs', 100),
-        'batch': config.get('batch', 16),
+        'batch': batch_size,
         'imgsz': config.get('imgsz', 640),
         'patience': config.get('patience', 20),
         'optimizer': config.get('optimizer', 'AdamW'),
@@ -61,9 +83,15 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         'pretrained': True,
         'verbose': True,
         'device': 0 if config.get('device', None) is None else config.get('device'),
-        'save_period': config.get('save_period', 10),
         'workers': config.get('workers', 8)
     }
+    
+    # Add more frequent checkpoints for large class sets
+    if num_classes > 200:
+        save_period = min(5, config.get('save_period', 10))  # Save more frequently
+        train_args['save_period'] = save_period
+    else:
+        train_args['save_period'] = config.get('save_period', 10)
     
     # Add augmentation parameters
     augmentation_params = [
@@ -76,6 +104,15 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         if param in config:
             train_args[param] = config[param]
     
+    # For UI state detection, minimize color and position augmentations
+    if any('status_' in class_name for class_name in data_config['names'].values()):
+        print("State-specific UI classes detected. Adjusting augmentation parameters...")
+        
+        # Fine-tune augmentations for state detection
+        train_args['hsv_h'] = min(0.01, train_args.get('hsv_h', 0.015))  # Minimal hue change
+        train_args['hsv_s'] = min(0.1, train_args.get('hsv_s', 0.2))     # Reduced saturation
+        train_args['hsv_v'] = min(0.1, train_args.get('hsv_v', 0.2))     # Reduced value/brightness
+    
     # Print training configuration
     print("\n=== ARK UI Detector Training Configuration ===")
     print(f"Model: {model_path}")
@@ -85,6 +122,14 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     print(f"Batch size: {train_args['batch']}")
     print(f"Image size: {train_args['imgsz']}")
     print(f"Device: {train_args['device']}")
+    print(f"Classes: {num_classes}")
+    
+    # Check for state-specific classes
+    state_classes = sum(1 for name in data_config['names'].values() if any(x in name for x in 
+                                                            ['_low', '_medium', '_full', '_active', '_inactive']))
+    if state_classes > 0:
+        print(f"State-specific classes: {state_classes}")
+    
     print("===============================================\n")
     
     # Start training
@@ -100,6 +145,15 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         # Create results directory
         results_dir = os.path.join(output_dir, run_name, 'results')
         os.makedirs(results_dir, exist_ok=True)
+        
+        # Plot training results
+        try:
+            results_csv = os.path.join(output_dir, run_name, 'results.csv')
+            if os.path.exists(results_csv):
+                plot_training_results(results_csv, results_dir)
+                print(f"Training plots saved to {results_dir}")
+        except Exception as e:
+            print(f"Warning: Could not generate result plots: {e}")
         
         return os.path.join(output_dir, run_name, 'weights', 'best.pt')
     except Exception as e:
@@ -176,6 +230,6 @@ if __name__ == "__main__":
     best_model_path = train_model(args.data, args.config, args.output, args.weights)
     
     if best_model_path:
-        print(f"\nNext step: Run 'python 5_evaluate_model.py --weights {best_model_path}' to evaluate your model.")
+        print(f"\nNext step: Run 'python training/5_evaluate_model.py --weights {best_model_path}' to evaluate your model.")
     else:
         print("\nTraining failed. Please check error messages above.")
