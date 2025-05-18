@@ -1,5 +1,5 @@
-# YOLOv8 Configuration for ARK UI Detection
-model: yolov8s.pt  # Use small model as base
+# YOLOv11 Configuration for ARK UI Detection
+model: yolo11n.pt  # Use YOLOv11 nano model as base
 
 # Training parameters
 epochs: 100

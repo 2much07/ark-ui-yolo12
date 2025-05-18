@@ -1,0 +1,7 @@
+train: train/images
+val: valid/images
+test: test/images
+
+names: 
+  0: entity_weight_max
+  1: player_quick_bar_slot

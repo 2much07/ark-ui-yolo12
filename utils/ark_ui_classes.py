@@ -1,7 +1,9 @@
 """
-ARK UI class definitions.
+ARK UI class definitions - Single source of truth.
 This file contains the comprehensive list of UI classes for ARK: Survival Ascended.
 """
+import os
+import yaml
 
 # Complete list of ARK UI classes for detection - Enhanced Super Complete Version
 ARK_UI_CLASSES = [
@@ -654,3 +656,70 @@ COMMON_ITEMS = [
 
 # Combine classes
 ALL_ARK_UI_CLASSES = ARK_UI_CLASSES + COMMON_ITEMS
+
+def get_class_dict():
+    """
+    Get classes as a dictionary with indices.
+    
+    Returns:
+        dict: Class dictionary {index: class_name}
+    """
+    return {i: name for i, name in enumerate(ARK_UI_CLASSES)}
+
+def save_to_yaml(output_path, dataset_path=None):
+    """
+    Save class definitions to YAML format for YOLOv8.
+    
+    Args:
+        output_path: Path to save the YAML file
+        dataset_path: Optional path to dataset root directory
+    
+    Returns:
+        str: Path to the saved YAML file
+    """
+    class_dict = get_class_dict()
+    
+    # Create data configuration
+    data = {
+        'names': class_dict
+    }
+    
+    # Add dataset paths if provided
+    if dataset_path:
+        data['path'] = os.path.abspath(dataset_path)
+        data['train'] = os.path.join('train', 'images')
+        data['val'] = os.path.join('val', 'images')
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    
+    # Write YAML file
+    with open(output_path, 'w') as f:
+        yaml.dump(data, f, sort_keys=False)
+    
+    print(f"Saved {len(class_dict)} classes to {output_path}")
+    return output_path
+
+def load_from_yaml(yaml_path):
+    """
+    Load class definitions from YAML file.
+    
+    Args:
+        yaml_path: Path to YAML file
+    
+    Returns:
+        dict: Class dictionary {index: class_name}
+    """
+    with open(yaml_path, 'r') as f:
+        data = yaml.safe_load(f)
+    
+    return data.get('names', {})
+
+# Example usage
+if __name__ == "__main__":
+    # Save classes to YAML
+    save_to_yaml("ark_ui_classes.yaml")
+    
+    # Verify by loading back
+    loaded_classes = load_from_yaml("ark_ui_classes.yaml")
+    print(f"Loaded {len(loaded_classes)} classes from YAML")

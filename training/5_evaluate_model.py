@@ -1,5 +1,5 @@
 """
-Evaluate YOLOv8 model for ARK UI Detection with enhanced state-specific evaluation.
+Evaluate YOLOv11 model for ARK UI Detection with enhanced state-specific evaluation.
 """
 import os
 import argparse
@@ -26,7 +26,7 @@ def load_classes(data_yaml):
 
 def evaluate_model(weights_path, data_yaml, validation_images=None, conf_threshold=0.25, iou_threshold=0.7):
     """
-    Evaluate YOLOv8 model on validation images.
+    Evaluate YOLOv11 model on validation images.
     
     Args:
         weights_path: Path to trained model weights
@@ -83,6 +83,8 @@ def evaluate_model(weights_path, data_yaml, validation_images=None, conf_thresho
         evaluate_state_specific_performance(metrics, class_names, output_dir)
     
     return metrics
+
+.
 
 def has_state_specific_classes(class_names):
     """Check if the class set includes state-specific classes."""

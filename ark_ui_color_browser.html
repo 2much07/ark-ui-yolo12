@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARK UI Color Browser - Compact List</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #eee;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .controls {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .color-preview {
+            width: 80px;
+            height: 60px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 5px;
+            color: white;
+            text-shadow: 0 0 2px black;
+            font-weight: bold;
+            font-size: 11px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .color-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 10px;
+            min-width: 200px;
+        }
+        .color-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        .color-value {
+            margin: 2px 0;
+            padding: 4px 6px;
+            background: #3d3d3d;
+            border: 1px solid #444;
+            border-radius: 3px;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            width: 100%;
+            box-sizing: border-box;
+            color: #fff;
+        }
+        .search-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+        .search-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #444;
+            border-radius: 3px;
+            font-size: 12px;
+            background: #3d3d3d;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 8px;
+            padding-right: 5px;
+        }
+        .category-btn {
+            background: #383838;
+            border: 1px solid #444;
+            color: #ddd;
+            padding: 3px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            white-space: nowrap;
+            transition: all 0.1s;
+        }
+        .category-btn.active {
+            background: #007acc;
+            border-color: #0066aa;
+        }
+        .copy-btn {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 2px 0;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #0066aa;
+        }
+        .color-list {
+            background: #2d2d2d;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            padding: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: calc(100vh - 200px);
+            min-height: 200px;
+            overflow-y: auto;
+        }
+        .color-item {
+            display: flex;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            margin: 2px 0;
+            align-items: center;
+            font-family: 'Consolas', 'Courier New', monospace;
+            white-space: nowrap;
+            transition: background-color 0.1s ease;
+        }
+        .color-item:hover {
+            background: #3d3d3d;
+        }
+        .color-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            border: 1px solid #444;
+            display: inline-block;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .color-id {
+            color: #888;
+            margin-right: 8px;
+            width: 40px;
+            text-align: right;
+            flex-shrink: 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .color-name {
+            color: #4fc3f7;
+            margin: 0 8px 0 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+            flex-shrink: 0;
+            max-width: 30%;
+        }
+        .color-hex {
+            color: #9e9e9e;
+            margin-right: 12px;
+            flex-shrink: 0;
+            font-size: 0.95em;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .color-desc {
+            color: #a5d8ff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: 4px;
+            opacity: 0.9;
+            flex: 1;
+            min-width: 0;
+            font-style: normal;
+        }
+        .color-desc::before {
+            content: '#';
+            color: #777;
+            margin-right: 4px;
+            opacity: 0.7;
+        }
+        .section-header {
+            font-size: 18px;
+            margin: 20px 0 10px;
+            padding: 5px 10px;
+            background: #333;
+            border-radius: 4px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .color-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-style: italic;
+        }
+        @media print {
+            .color-item {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>ARK UI Color Browser - Compact List</h1>
+    
+    <div class="controls">
+        <div class="color-info">
+            <div class="search-options">
+                <input type="text" id="searchId" class="search-input" placeholder="Search by ID (e.g., 5, 10, 15)">
+                <input type="text" id="searchClass" class="search-input" placeholder="Search by class (e.g., button, panel)">
+                <input type="text" id="searchName" class="search-input" placeholder="Search by name or hex (e.g., red, #FF0000)">
+            </div>
+            
+            <div class="category-filter">
+                <button class="category-btn active" data-category="all">All Colors</button>
+                <button class="category-btn" data-category="0-24">Basic UI (0-24)</button>
+                <button class="category-btn" data-category="25-49">Status (25-49)</button>
+                <button class="category-btn" data-category="50-69">Alerts (50-69)</button>
+                <button class="category-btn" data-category="70-99">Player (70-99)</button>
+                <button class="category-btn" data-category="100-129">Entity (100-129)</button>
+                <button class="category-btn" data-category="130-154">Tooltip (130-154)</button>
+                <button class="category-btn" data-category="155-184">Craft (155-184)</button>
+                <button class="category-btn" data-category="185-204">Tab (185-204)</button>
+                <button class="category-btn" data-category="205-229">Map (205-229)</button>
+                <button class="category-btn" data-category="230-249">Button (230-249)</button>
+                <button class="category-btn" data-category="250-274">Creature (250-274)</button>
+                <button class="category-btn" data-category="275-294">Structure (275-294)</button>
+                <button class="category-btn" data-category="295-319">Special (295-319)</button>
+                <button class="category-btn" data-category="320-339">Character (320-339)</button>
+                <button class="category-btn" data-category="340-359">Tribe (340-359)</button>
+                <button class="category-btn" data-category="360-399">Resources (360-399)</button>
+                <button class="category-btn" data-category="400-449">Tools (400-449)</button>
+                <button class="category-btn" data-category="450-474">Armor (450-474)</button>
+                <button class="category-btn" data-category="475-499">Building (475-499)</button>
+                <button class="category-btn" data-category="500-549">Advanced (500-549)</button>
+            </div>
+        </div>
+        <div class="color-preview-container">
+            <div class="color-preview" id="colorPreview">Click any color</div>
+            <div style="margin-top: 10px;">
+                <input type="text" id="hexValue" class="color-value" readonly>
+                <button class="copy-btn" onclick="copyToClipboard('hexValue')">Copy HEX</button>
+            </div>
+            <div>
+                <input type="text" id="rgbValue" class="color-value" readonly>
+                <button class="copy-btn" onclick="copyToClipboard('rgbValue')">Copy RGB</button>
+            </div>
+            <div>
+                <input type="text" id="hslValue" class="color-value" readonly>
+                <button class="copy-btn" onclick="copyToClipboard('hslValue')">Copy HSL</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="color-list" id="colorList">
+        <!-- Colors will be added here by JavaScript -->
+    </div>
+
+    <script>
+        // ARK UI Colors Data with descriptions from ark_ui_data.yaml
+        const arkColors = [
+            // Basic UI Elements (0-9)
+            { id: 0, name: 'ui_panel_background', hex: '#1A1A1A', desc: 'Base panel background' },
+            { id: 1, name: 'ui_panel_border', hex: '#3A3A3A', desc: 'Panel border/frame' },
+            { id: 2, name: 'ui_scrollbar', hex: '#2D2D2D', desc: 'Scrollbar element' },
+            { id: 3, name: 'ui_scrollbar_handle', hex: '#494949', desc: 'Scrollbar drag handle' },
+            { id: 4, name: 'ui_divider', hex: '#3A3A3A', desc: 'Visual divider between sections' },
+            { id: 5, name: 'ui_highlight', hex: '#007ACC', desc: 'Currently selected element highlight' },
+            { id: 6, name: 'ui_dropdown_arrow', hex: '#CCCCCC', desc: 'Dropdown menu arrow indicator' },
+            { id: 7, name: 'ui_checkbox_empty', hex: '#2D2D2D', desc: 'Unchecked checkbox' },
+            { id: 8, name: 'ui_checkbox_filled', hex: '#007ACC', desc: 'Checked checkbox' },
+            { id: 9, name: 'ui_slider', hex: '#444444', desc: 'Slider control element' },
+            
+            // Main HUD Elements (10-24)
+            { id: 10, name: 'hud_compass', hex: '#D2D2D2', desc: 'Top compass' },
+            { id: 11, name: 'hud_hotbar', hex: '#333333', desc: 'Bottom hotbar' },
+            { id: 12, name: 'hud_crosshair', hex: '#FFFFFF', desc: 'Aiming crosshair' },
+            { id: 13, name: 'hud_interaction_prompt', hex: '#E2E2E2', desc: 'Press E to interact text' },
+            { id: 14, name: 'hud_whistle_wheel', hex: '#B3D9FF', desc: 'Dino whistle command wheel' },
+            { id: 15, name: 'hud_emote_wheel', hex: '#FFD9B3', desc: 'Player emote wheel' },
+            { id: 16, name: 'hud_quickchat_wheel', hex: '#D9FFB3', desc: 'Quick chat wheel' },
+            { id: 17, name: 'hud_extended_ui_toggle', hex: '#CCCCCC', desc: 'Toggle for extended UI' },
+            { id: 18, name: 'hud_chat_box', hex: '#262626', desc: 'Chat message display area' },
+            { id: 19, name: 'hud_chat_input', hex: '#333333', desc: 'Chat text input field' },
+            { id: 20, name: 'hud_tribe_log_popup', hex: '#3A3A3A', desc: 'Tribe log popup notification' },
+            { id: 21, name: 'hud_gps_coordinates', hex: '#B3FFD9', desc: 'GPS coordinates display' },
+            { id: 22, name: 'hud_temperature_display', hex: '#FFB3D9', desc: 'Current temperature display' },
+            { id: 23, name: 'hud_active_buffs', hex: '#A3E0A3', desc: 'Active status effects/buffs' },
+            { id: 24, name: 'hud_active_debuffs', hex: '#E0A3A3', desc: 'Active negative effects/debuffs' },
+            
+            // Status Indicators (25-49)
+            { id: 25, name: 'status_health_low', hex: '#FF3333', desc: 'Health bar when low (critical)' },
+            { id: 26, name: 'status_health_medium', hex: '#FF6666', desc: 'Health bar when medium' },
+            { id: 27, name: 'status_health_full', hex: '#FF9999', desc: 'Health bar when full/high' },
+            { id: 28, name: 'status_stamina_low', hex: '#33CC33', desc: 'Stamina bar when low' },
+            { id: 29, name: 'status_stamina_medium', hex: '#66CC66', desc: 'Stamina bar when medium' },
+            { id: 30, name: 'status_stamina_full', hex: '#99CC99', desc: 'Stamina bar when full' },
+            { id: 31, name: 'status_food_low', hex: '#FF9900', desc: 'Food bar when low' },
+            { id: 32, name: 'status_food_medium', hex: '#FFBB33', desc: 'Food bar when medium' },
+            { id: 33, name: 'status_food_full', hex: '#FFDD99', desc: 'Food bar when full' },
+            { id: 34, name: 'status_water_low', hex: '#3399FF', desc: 'Water bar when low' },
+            { id: 35, name: 'status_water_medium', hex: '#66B2FF', desc: 'Water bar when medium' },
+            { id: 36, name: 'status_water_full', hex: '#99CCFF', desc: 'Water bar when full' },
+            { id: 37, name: 'status_weight_low', hex: '#CC66CC', desc: 'Weight when low (mostly empty)' },
+            { id: 38, name: 'status_weight_medium', hex: '#D699D6', desc: 'Weight when medium' },
+            { id: 39, name: 'status_weight_heavy', hex: '#FFCCFF', desc: 'Weight when high/encumbered' },
+            { id: 40, name: 'status_torpor_low', hex: '#9966CC', desc: 'Torpidity bar when low' },
+            { id: 41, name: 'status_torpor_medium', hex: '#B399E0', desc: 'Torpidity bar when medium' },
+            { id: 42, name: 'status_torpor_high', hex: '#CCCCFF', desc: 'Torpidity bar when high' },
+            { id: 43, name: 'status_xp_gained', hex: '#FFFF66', desc: 'XP gain popup/notification' },
+            { id: 44, name: 'status_level_up_available', hex: '#FFFF00', desc: 'Level up indicator' },
+            { id: 45, name: 'status_effect_icons', hex: '#CCFFCC', desc: 'Status effect icons' },
+            { id: 46, name: 'status_oxygen_low', hex: '#33CCFF', desc: 'Oxygen bar when low' },
+            { id: 47, name: 'status_oxygen_medium', hex: '#66D9FF', desc: 'Oxygen bar when medium' },
+            { id: 48, name: 'status_oxygen_full', hex: '#99E6FF', desc: 'Oxygen bar when full' },
+            { id: 49, name: 'status_fortitude_indicator', hex: '#996633', desc: 'Fortitude status indicator' },
+            
+            // Alert Messages (50-69)
+            { id: 50, name: 'alert_starvation', hex: '#FF6600', desc: 'Starvation warning' },
+            { id: 51, name: 'alert_dehydration', hex: '#0099FF', desc: 'Dehydration warning' },
+            { id: 52, name: 'alert_encumbered', hex: '#CC33CC', desc: 'Too heavy/encumbered warning' },
+            { id: 53, name: 'alert_too_hot', hex: '#FF3300', desc: 'Temperature too hot warning' },
+            { id: 54, name: 'alert_too_cold', hex: '#3399FF', desc: 'Temperature too cold warning' },
+            { id: 55, name: 'alert_level_up', hex: '#FFCC00', desc: 'Level up notification' },
+            { id: 56, name: 'alert_tribe_message', hex: '#33CC99', desc: 'Tribe notification' },
+            { id: 57, name: 'alert_death_message', hex: '#FF0000', desc: 'Death screen text' },
+            { id: 58, name: 'alert_taming_complete', hex: '#99FF66', desc: 'Taming completed notification' },
+            { id: 59, name: 'alert_insufficient_engrams', hex: '#FF9966', desc: 'Not enough engram points' },
+            { id: 60, name: 'alert_structure_blocked', hex: '#FF6666', desc: 'Structure placement blocked' },
+            { id: 61, name: 'alert_enemy_player_nearby', hex: '#FF3333', desc: 'Enemy player nearby warning' },
+            { id: 62, name: 'alert_server_message', hex: '#FFCC33', desc: 'Server announcement' },
+            { id: 63, name: 'alert_disconnection_warning', hex: '#FF3366', desc: 'Server disconnection warning' },
+            { id: 64, name: 'alert_item_broken', hex: '#FF6633', desc: 'Item broken notification' },
+            { id: 65, name: 'alert_creature_starving', hex: '#FF9933', desc: 'Creature starving warning' },
+            { id: 66, name: 'alert_creature_dying', hex: '#CC0000', desc: 'Creature low health warning' },
+            { id: 67, name: 'alert_imprint_available', hex: '#FF99CC', desc: 'Imprinting available notification' },
+            { id: 68, name: 'alert_gasoline_low', hex: '#FF9966', desc: 'Generator low fuel warning' },
+            { id: 69, name: 'alert_element_low', hex: '#CC66FF', desc: 'Tek structure low element warning' },
+            
+            // Player Inventory - Left Side (70-99)
+            { id: 70, name: 'player_inventory_title', hex: '#CCCCCC', desc: 'Inventory title text' },
+            { id: 71, name: 'player_inventory_slot_empty', hex: '#333333', desc: 'Empty inventory slot' },
+            { id: 72, name: 'player_inventory_slot_filled', hex: '#4D4D4D', desc: 'Filled inventory slot' },
+            { id: 73, name: 'player_item_icon', hex: '#E6E6E6', desc: 'Item in player inventory' },
+            { id: 74, name: 'player_item_stack_count', hex: '#FFFFFF', desc: 'Stack count number' },
+            { id: 75, name: 'player_item_durability_high', hex: '#33CC33', desc: 'Item durability bar (high)' },
+            { id: 76, name: 'player_item_durability_med', hex: '#FFCC00', desc: 'Item durability bar (medium)' },
+            { id: 77, name: 'player_item_durability_low', hex: '#FF3333', desc: 'Item durability bar (low/critical)' },
+            { id: 78, name: 'player_search_bar', hex: '#262626', desc: 'Inventory search field' },
+            { id: 79, name: 'player_weight_current', hex: '#CC99CC', desc: 'Current weight number' },
+            { id: 80, name: 'player_weight_max', hex: '#FF99FF', desc: 'Maximum weight number' },
+            { id: 81, name: 'player_weight_slider', hex: '#CC66CC', desc: 'Weight slider/visual indicator' },
+            { id: 82, name: 'player_transfer_all_button', hex: '#666666', desc: 'Transfer all items button (right arrow)' },
+            { id: 83, name: 'player_drop_item_button', hex: '#993333', desc: 'Drop item button' },
+            { id: 84, name: 'player_character_model', hex: '#4D4D4D', desc: '3D character model' },
+            { id: 85, name: 'player_armor_slot_head', hex: '#3D3D3D', desc: 'Head armor slot' },
+            { id: 86, name: 'player_armor_slot_chest', hex: '#3D3D3D', desc: 'Chest armor slot' },
+            { id: 87, name: 'player_armor_slot_gloves', hex: '#3D3D3D', desc: 'Gloves armor slot' },
+            { id: 88, name: 'player_armor_slot_legs', hex: '#3D3D3D', desc: 'Legs armor slot' },
+            { id: 89, name: 'player_armor_slot_feet', hex: '#3D3D3D', desc: 'Feet armor slot' },
+            { id: 90, name: 'player_armor_slot_shield', hex: '#3D3D3D', desc: 'Shield slot' },
+            { id: 91, name: 'player_quick_bar_slot', hex: '#4D4D4D', desc: 'Hotbar quick slot assignment' },
+            { id: 92, name: 'player_sort_button', hex: '#666666', desc: 'Sort inventory button' },
+            { id: 93, name: 'player_filter_button', hex: '#666666', desc: 'Filter inventory button' },
+            { id: 94, name: 'player_folder_tab', hex: '#4D4D4D', desc: 'Folder/category tab' },
+            { id: 95, name: 'player_folder_item_count', hex: '#CCCCCC', desc: 'Item count in folder' },
+            { id: 96, name: 'player_blueprint_icon', hex: '#6699FF', desc: 'Blueprint icon overlay' },
+            { id: 97, name: 'player_item_equipped_marker', hex: '#33CC33', desc: 'Equipped item indicator' },
+            { id: 98, name: 'player_item_favorite_marker', hex: '#FFCC00', desc: 'Favorited item indicator' },
+            { id: 99, name: 'player_quick_access_bar', hex: '#4D4D4D', desc: 'Quick access bar' },
+            
+            // Entity Inventory - Right Side (100-129)
+            { id: 100, name: 'entity_inventory_title', hex: '#CCCCCC', desc: 'Entity name title text' },
+            { id: 101, name: 'entity_inventory_slot_empty', hex: '#2A2A2A', desc: 'Empty entity inventory slot' },
+            { id: 102, name: 'entity_inventory_slot_filled', hex: '#424242', desc: 'Filled entity inventory slot' },
+            { id: 103, name: 'entity_item_icon', hex: '#E6E6E6', desc: 'Item in entity inventory' },
+            { id: 104, name: 'entity_item_stack_count', hex: '#FFFFFF', desc: 'Stack count in entity inventory' },
+            { id: 105, name: 'entity_item_durability', hex: '#66CC66', desc: 'Item durability in entity inventory' },
+            { id: 106, name: 'entity_search_bar', hex: '#262626', desc: 'Entity inventory search field' },
+            { id: 107, name: 'entity_weight_current', hex: '#CC99CC', desc: 'Entity current weight number' },
+            { id: 108, name: 'entity_weight_max', hex: '#FF99FF', desc: 'Entity maximum weight number' },
+            { id: 109, name: 'entity_weight_slider', hex: '#CC66CC', desc: 'Entity weight slider/indicator' },
+            { id: 110, name: 'entity_transfer_all_button', hex: '#666666', desc: 'Transfer all to player button (left arrow)' },
+            { id: 111, name: 'entity_drop_item_button', hex: '#993333', desc: 'Drop item from entity button' },
+            { id: 112, name: 'entity_model', hex: '#4D4D4D', desc: 'Entity 3D model (if shown)' },
+            { id: 113, name: 'structure_name', hex: '#99CCFF', desc: 'Structure name title' },
+            { id: 114, name: 'structure_content_count', hex: '#CCCCCC', desc: 'Content count (e.g., "50/100")' },
+            { id: 115, name: 'dino_name', hex: '#CCFF99', desc: 'Dinosaur name title' },
+            { id: 116, name: 'dino_level', hex: '#FFCC99', desc: 'Dinosaur level display' },
+            { id: 117, name: 'dino_stats_button', hex: '#669999', desc: 'View dinosaur stats button' },
+            { id: 118, name: 'dino_inventory_button', hex: '#669999', desc: 'View dinosaur inventory button' },
+            { id: 119, name: 'dino_behavior_setting', hex: '#996666', desc: 'Dinosaur behavior setting' },
+            { id: 120, name: 'dino_following_setting', hex: '#669966', desc: 'Dinosaur following setting' },
+            { id: 121, name: 'dino_options_button', hex: '#666699', desc: 'Dinosaur options button' },
+            { id: 122, name: 'dino_saddle_slot', hex: '#663333', desc: 'Dinosaur saddle slot' },
+            { id: 123, name: 'dino_armor_slot', hex: '#666633', desc: 'Dinosaur armor slot' },
+            { id: 124, name: 'structure_power_indicator', hex: '#33CC33', desc: 'Structure power indicator (on/off)' },
+            { id: 125, name: 'structure_fuel_level', hex: '#FFCC66', desc: 'Structure fuel level indicator' },
+            { id: 126, name: 'structure_options_button', hex: '#666666', desc: 'Structure options button' },
+            { id: 127, name: 'remote_use_button', hex: '#6699CC', desc: 'Remote use/access button' },
+            { id: 128, name: 'remote_inventory_button', hex: '#6699CC', desc: 'Remote inventory button' },
+            { id: 129, name: 'transfer_to_container_text', hex: '#CCCCCC', desc: 'Transfer to [container] text' },
+            
+            // Item Tooltip & Details (130-154)
+            { id: 130, name: 'item_tooltip_background', hex: '#1A1A1A', desc: 'Item tooltip background panel' },
+            { id: 131, name: 'item_tooltip_title', hex: '#FFFFFF', desc: 'Item name in tooltip' },
+            { id: 132, name: 'item_tooltip_description', hex: '#CCCCCC', desc: 'Item description text' },
+            { id: 133, name: 'item_tooltip_weight', hex: '#CC99CC', desc: 'Item weight value' },
+            { id: 134, name: 'item_tooltip_durability', hex: '#66CC66', desc: 'Item durability details' },
+            { id: 135, name: 'item_spoil_timer', hex: '#FF9966', desc: 'Spoilage timer for perishables' },
+            { id: 136, name: 'item_tooltip_stats', hex: '#99CCFF', desc: 'Item stats (weapons/armor)' },
+            { id: 137, name: 'item_tooltip_requirements', hex: '#FFCC99', desc: 'Item usage requirements' },
+            { id: 138, name: 'item_tooltip_engram_req', hex: '#CCFFCC', desc: 'Engram requirements for blueprint' },
+            { id: 139, name: 'item_tooltip_blueprint', hex: '#99CCFF', desc: 'Blueprint: indicator text' },
+            { id: 140, name: 'item_tooltip_quality_prim', hex: '#FFFFFF', desc: 'Primitive quality indicator' },
+            { id: 141, name: 'item_tooltip_quality_common', hex: '#33CC33', desc: 'Common quality indicator' },
+            { id: 142, name: 'item_tooltip_quality_rare', hex: '#3399FF', desc: 'Rare quality indicator' },
+            { id: 143, name: 'item_tooltip_quality_epic', hex: '#9933FF', desc: 'Epic quality indicator' },
+            { id: 144, name: 'item_tooltip_quality_legend', hex: '#FF3399', desc: 'Legendary quality indicator' },
+            { id: 145, name: 'item_tooltip_quality_asc', hex: '#FF9933', desc: 'Ascendant quality indicator' },
+            { id: 146, name: 'item_tooltip_crafted_by', hex: '#CCCCCC', desc: 'Crafted by: information' },
+            { id: 147, name: 'item_tooltip_repair_cost', hex: '#FFCC99', desc: 'Repair cost information' },
+            { id: 148, name: 'item_equip_option', hex: '#66CC66', desc: 'Equip option in context menu' },
+            { id: 149, name: 'item_drop_option', hex: '#CC6666', desc: 'Drop option in context menu' },
+            { id: 150, name: 'item_transfer_option', hex: '#6699CC', desc: 'Transfer option in context menu' },
+            { id: 151, name: 'item_split_option', hex: '#CCCC66', desc: 'Split Stack option in context menu' },
+            { id: 152, name: 'item_consume_option', hex: '#CC9966', desc: 'Consume option in context menu' },
+            { id: 153, name: 'item_rename_option', hex: '#9999CC', desc: 'Rename option in context menu' },
+            { id: 154, name: 'item_demolish_timer', hex: '#FF6666', desc: 'Demolish countdown timer' },
+            
+            // Crafting & Engrams (155-184)
+            { id: 155, name: 'craft_button_active', hex: '#33CC33', desc: 'Craft button when clickable' },
+            { id: 156, name: 'craft_button_inactive', hex: '#666666', desc: 'Craft button when unavailable' },
+            { id: 157, name: 'crafting_queue_slot_empty', hex: '#333333', desc: 'Empty crafting queue slot' },
+            { id: 158, name: 'crafting_queue_slot_occupied', hex: '#4D4D4D', desc: 'Occupied crafting queue slot' },
+            { id: 159, name: 'crafting_progress_bar_idle', hex: '#4D4D4D', desc: 'Crafting progress bar (idle)' },
+            { id: 160, name: 'crafting_progress_bar_active', hex: '#66CC66', desc: 'Crafting progress bar (active)' },
+            { id: 161, name: 'required_materials_sufficient', hex: '#66CC66', desc: 'Materials indicator (sufficient)' },
+            { id: 162, name: 'required_materials_insufficient', hex: '#CC6666', desc: 'Materials indicator (insufficient)' },
+            { id: 163, name: 'blueprint_availability_icon', hex: '#6699FF', desc: 'Blueprint available indicator' },
+            { id: 164, name: 'craft_all_button', hex: '#33CC33', desc: 'Craft All button' },
+            { id: 165, name: 'craft_one_button', hex: '#33AA33', desc: 'Craft 1 button' },
+            { id: 166, name: 'crafting_speed_modifier', hex: '#CCCC66', desc: 'Crafting speed modifier display' },
+            { id: 167, name: 'engram_points_available', hex: '#FFCC00', desc: 'Available engram points display' },
+            { id: 168, name: 'engram_icon_locked', hex: '#666666', desc: 'Locked engram icon' },
+            { id: 169, name: 'engram_icon_available', hex: '#6699CC', desc: 'Available engram icon' },
+            { id: 170, name: 'engram_icon_learned', hex: '#66CC66', desc: 'Learned engram icon' },
+            { id: 171, name: 'engram_level_requirement', hex: '#FF9966', desc: 'Level requirement for engram' },
+            { id: 172, name: 'engram_points_cost', hex: '#FFCC00', desc: 'Engram points cost display' },
+            { id: 173, name: 'engram_search_bar', hex: '#262626', desc: 'Engram search field' },
+            { id: 174, name: 'engram_filter_button', hex: '#666666', desc: 'Engram filter options button' },
+            { id: 175, name: 'engram_category_tab', hex: '#4D4D4D', desc: 'Engram category tab' },
+            { id: 176, name: 'tek_engram_category', hex: '#CC99FF', desc: 'Tek tier engram category' },
+            { id: 177, name: 'engram_hide_learned_toggle', hex: '#666666', desc: 'Toggle to hide learned engrams' },
+            { id: 178, name: 'engram_item_icon', hex: '#CCCCCC', desc: 'Engram item preview icon' },
+            { id: 179, name: 'learn_button_active', hex: '#33CC33', desc: 'Learn button when active' },
+            { id: 180, name: 'learn_button_inactive', hex: '#666666', desc: 'Learn button when inactive' },
+            { id: 181, name: 'mindwipe_tonic_indicator', hex: '#FF99CC', desc: 'Mindwipe tonic availability' },
+            { id: 182, name: 'crafting_station_required', hex: '#FFCC99', desc: 'Required crafting station indicator' },
+            { id: 183, name: 'crafting_requirement_met', hex: '#66CC66', desc: 'Requirement met checkmark' },
+            { id: 184, name: 'crafting_requirement_unmet', hex: '#CC6666', desc: 'Requirement unmet X mark' },
+            
+            // Tab Navigation (185-204)
+            { id: 185, name: 'inventory_tab', hex: '#4D4D4D', desc: 'Inventory tab' },
+            { id: 186, name: 'inventory_tab_selected', hex: '#666666', desc: 'Inventory tab when selected' },
+            { id: 187, name: 'crafting_tab', hex: '#4D4D4D', desc: 'Crafting tab' },
+            { id: 188, name: 'crafting_tab_selected', hex: '#666666', desc: 'Crafting tab when selected' },
+            { id: 189, name: 'engram_tab', hex: '#4D4D4D', desc: 'Engram tab' },
+            { id: 190, name: 'engram_tab_selected', hex: '#666666', desc: 'Engram tab when selected' },
+            { id: 191, name: 'character_tab', hex: '#4D4D4D', desc: 'Character stats tab' },
+            { id: 192, name: 'character_tab_selected', hex: '#666666', desc: 'Character tab when selected' },
+            { id: 193, name: 'tribe_tab', hex: '#4D4D4D', desc: 'Tribe management tab' },
+            { id: 194, name: 'tribe_tab_selected', hex: '#666666', desc: 'Tribe tab when selected' },
+            { id: 195, name: 'structure_tab', hex: '#4D4D4D', desc: 'Structure options tab' },
+            { id: 196, name: 'structure_tab_selected', hex: '#666666', desc: 'Structure tab when selected' },
+            { id: 197, name: 'spawn_map_tab', hex: '#4D4D4D', desc: 'Spawn location tab' },
+            { id: 198, name: 'spawn_map_tab_selected', hex: '#666666', desc: 'Spawn location tab when selected' },
+            { id: 199, name: 'tek_teleport_tab', hex: '#4D4D4D', desc: 'Tek teleporter tab' },
+            { id: 200, name: 'tek_teleport_tab_selected', hex: '#666666', desc: 'Tek teleporter tab when selected' },
+            { id: 201, name: 'cosmetic_tab', hex: '#4D4D4D', desc: 'Cosmetics/skins tab' },
+            { id: 202, name: 'cosmetic_tab_selected', hex: '#666666', desc: 'Cosmetics tab when selected' },
+            { id: 203, name: 'tribute_tab', hex: '#4D4D4D', desc: 'Tribute tab' },
+            { id: 204, name: 'tribute_tab_selected', hex: '#666666', desc: 'Tribute tab when selected' },
+            
+            // Map Elements (205-229)
+            { id: 205, name: 'map_background', hex: '#333333', desc: 'Map background/terrain' },
+            { id: 206, name: 'map_player_marker', hex: '#00FFFF', desc: 'Player location marker' },
+            { id: 207, name: 'map_tribe_member_marker', hex: '#33CC33', desc: 'Tribe member marker' },
+            { id: 208, name: 'map_tamed_dino_marker', hex: '#FFCC00', desc: 'Tamed dino location marker' },
+            { id: 209, name: 'map_bed_marker', hex: '#FF6666', desc: 'Bed spawn point marker' },
+            { id: 210, name: 'map_base_marker', hex: '#6699FF', desc: 'Base/structure marker' },
+            { id: 211, name: 'map_waypoint_marker', hex: '#FF99FF', desc: 'Custom waypoint marker' },
+            { id: 212, name: 'map_obelisk_marker', hex: '#FF3333', desc: 'Obelisk marker' },
+            { id: 213, name: 'map_cave_entrance_marker', hex: '#996633', desc: 'Cave entrance marker' },
+            { id: 214, name: 'map_beacon_marker', hex: '#3399FF', desc: 'Drop beacon marker' },
+            { id: 215, name: 'map_mission_marker', hex: '#FFFF00', desc: 'Mission start location marker' },
+            { id: 216, name: 'map_boss_terminal_marker', hex: '#FF3399', desc: 'Boss terminal marker' },
+            { id: 217, name: 'map_supply_drop_marker', hex: '#3399FF', desc: 'Supply drop marker' },
+            { id: 218, name: 'map_explorer_note_marker', hex: '#FFCC99', desc: 'Explorer note marker' },
+            { id: 219, name: 'map_glitch_marker', hex: '#CC66FF', desc: 'Glitch/corruption marker' },
+            { id: 220, name: 'map_resource_node_marker', hex: '#99CCFF', desc: 'Resource node marker' },
+            { id: 221, name: 'map_charging_station_marker', hex: '#66FFFF', desc: 'Charge station marker' },
+            { id: 222, name: 'map_ocean_depth_indicator', hex: '#3366CC', desc: 'Ocean depth coloration' },
+            { id: 223, name: 'map_coordinates_display', hex: '#CCCCCC', desc: 'Map coordinates display' },
+            { id: 224, name: 'map_zoom_in_button', hex: '#666666', desc: 'Map zoom in control' },
+            { id: 225, name: 'map_zoom_out_button', hex: '#666666', desc: 'Map zoom out control' },
+            { id: 226, name: 'map_filter_button', hex: '#666666', desc: 'Map filter options button' },
+            { id: 227, name: 'map_place_waypoint_button', hex: '#666666', desc: 'Place waypoint button' },
+            { id: 228, name: 'map_clear_waypoint_button', hex: '#666666', desc: 'Clear waypoint button' },
+            { id: 229, name: 'map_region_name_text', hex: '#FFFFFF', desc: 'Region/biome name display' },
+            
+            // Button Elements (230-249)
+            { id: 230, name: 'button_default', hex: '#4D4D4D', desc: 'Standard button' },
+            { id: 231, name: 'button_highlighted', hex: '#666666', desc: 'Button when highlighted/hovered' },
+            { id: 232, name: 'button_pressed', hex: '#333333', desc: 'Button when pressed' },
+            { id: 233, name: 'button_disabled', hex: '#2A2A2A', desc: 'Button when disabled' },
+            { id: 234, name: 'back_button', hex: '#4D4D4D', desc: 'Back/return button' },
+            { id: 235, name: 'close_button', hex: '#CC3333', desc: 'Close/X button' },
+            { id: 236, name: 'option_button', hex: '#4D4D4D', desc: 'Options/settings button' },
+            { id: 237, name: 'accept_button', hex: '#33CC33', desc: 'Accept/confirm button' },
+            { id: 238, name: 'cancel_button', hex: '#CC3333', desc: 'Cancel button' },
+            { id: 239, name: 'pin_button', hex: '#4D4D4D', desc: 'Pin item button' },
+            { id: 240, name: 'unpin_button', hex: '#4D4D4D', desc: 'Unpin item button' },
+            { id: 241, name: 'transfer_button', hex: '#4D4D4D', desc: 'Transfer button' },
+            { id: 242, name: 'rename_button', hex: '#4D4D4D', desc: 'Rename button' },
+            { id: 243, name: 'sort_button', hex: '#4D4D4D', desc: 'Sort items button' },
+            { id: 244, name: 'unclaim_button', hex: '#CC3333', desc: 'Unclaim dino button' },
+            { id: 245, name: 'enable_wandering_button', hex: '#33CC33', desc: 'Enable wandering button' },
+            { id: 246, name: 'disable_wandering_button', hex: '#CC3333', desc: 'Disable wandering button' },
+            { id: 247, name: 'enable_mating_button', hex: '#FF6699', desc: 'Enable mating button' },
+            { id: 248, name: 'disable_mating_button', hex: '#CC3333', desc: 'Disable mating button' },
+            { id: 249, name: 'destroy_button', hex: '#CC3333', desc: 'Destroy/demolish button' },
+            
+            // Creature & Taming Elements (250-274)
+            { id: 250, name: 'taming_progress_bar_empty', hex: '#333333', desc: 'Taming progress bar (empty)' },
+            { id: 251, name: 'taming_progress_bar_partial', hex: '#66CC66', desc: 'Taming progress bar (partially filled)' },
+            { id: 252, name: 'taming_progress_bar_full', hex: '#33CC33', desc: 'Taming progress bar (nearly complete)' },
+            { id: 253, name: 'taming_effectiveness_high', hex: '#33CC33', desc: 'Taming effectiveness indicator (high)' },
+            { id: 254, name: 'taming_effectiveness_medium', hex: '#FFCC00', desc: 'Taming effectiveness indicator (medium)' },
+            { id: 255, name: 'taming_effectiveness_low', hex: '#CC3333', desc: 'Taming effectiveness indicator (low)' },
+            { id: 256, name: 'creature_health_bar', hex: '#FF3333', desc: 'Creature health bar' },
+            { id: 257, name: 'creature_stamina_bar', hex: '#33CC33', desc: 'Creature stamina bar' },
+            { id: 258, name: 'creature_food_bar', hex: '#FF9933', desc: 'Creature food bar' },
+            { id: 259, name: 'creature_torpidity_bar', hex: '#9933CC', desc: 'Creature torpidity bar' },
+            { id: 260, name: 'creature_level_text', hex: '#FFCC00', desc: 'Creature level display' },
+            { id: 261, name: 'creature_gender_male', hex: '#3399FF', desc: 'Male gender icon' },
+            { id: 262, name: 'creature_gender_female', hex: '#FF6699', desc: 'Female gender icon' },
+            { id: 263, name: 'creature_xp_bar', hex: '#FFFF00', desc: 'Creature XP bar' },
+            { id: 264, name: 'maturation_progress_bar', hex: '#CC99FF', desc: 'Baby dino maturation progress' },
+            { id: 265, name: 'incubation_progress_bar', hex: '#FFCC99', desc: 'Egg incubation progress' },
+            { id: 266, name: 'gestation_progress_bar', hex: '#FF99CC', desc: 'Pregnancy gestation progress' },
+            { id: 267, name: 'imprint_icon', hex: '#FF99CC', desc: 'Imprinting icon/indicator' },
+            { id: 268, name: 'imprint_progress_bar', hex: '#FF66CC', desc: 'Imprinting progress bar' },
+            { id: 269, name: 'imprint_timer', hex: '#CC99FF', desc: 'Time until next imprint' },
+            { id: 270, name: 'creature_stat_points', hex: '#FFCC00', desc: 'Available stat points indicator' },
+            { id: 271, name: 'creature_stat_increase_button', hex: '#66CC66', desc: 'Stat increase button' },
+            { id: 272, name: 'creature_mutation_counter', hex: '#FF66FF', desc: 'Mutation counter' },
+            { id: 273, name: 'cryopod_cooldown_timer', hex: '#66CCFF', desc: 'Cryopod cooldown timer' },
+            { id: 274, name: 'cryopod_creature_preview', hex: '#99CCFF', desc: 'Creature preview in cryopod' },
+            
+            // Structure Interface Elements (275-294)
+            { id: 275, name: 'structure_health_bar', hex: '#FF6666', desc: 'Structure health bar' },
+            { id: 276, name: 'structure_shield_bar', hex: '#6699FF', desc: 'Tek shield strength bar' },
+            { id: 277, name: 'structure_inventory_button', hex: '#4D4D4D', desc: 'Structure inventory button' },
+            { id: 278, name: 'structure_transfer_button', hex: '#4D4D4D', desc: 'Transfer to structure button' },
+            { id: 279, name: 'structure_options_menu', hex: '#333333', desc: 'Structure options menu' },
+            { id: 280, name: 'structure_demolish_option', hex: '#CC3333', desc: 'Demolish structure option' },
+            { id: 281, name: 'structure_pickup_option', hex: '#66CC66', desc: 'Pick up structure option' },
+            { id: 282, name: 'structure_paint_option', hex: '#6699FF', desc: 'Paint structure option' },
+            { id: 283, name: 'structure_change_pin_option', hex: '#FFCC00', desc: 'Change pin code option' },
+            { id: 284, name: 'structure_snap_points', hex: '#66FFFF', desc: 'Structure snap points' },
+            { id: 285, name: 'structure_placement_valid', hex: '#33CC33', desc: 'Valid placement indicator' },
+            { id: 286, name: 'structure_placement_invalid', hex: '#CC3333', desc: 'Invalid placement indicator' },
+            { id: 287, name: 'structure_powered_indicator', hex: '#33CC33', desc: 'Powered indicator (green)' },
+            { id: 288, name: 'structure_unpowered_indicator', hex: '#CC3333', desc: 'Unpowered indicator (red)' },
+            { id: 289, name: 'generator_fuel_level', hex: '#FFCC66', desc: 'Generator fuel level indicator' },
+            { id: 290, name: 'electrical_wire_connection', hex: '#FFFF00', desc: 'Electrical wire connection point' },
+            { id: 291, name: 'water_pipe_connection', hex: '#3399FF', desc: 'Water pipe connection point' },
+            { id: 292, name: 'gas_pipe_connection', hex: '#99CC33', desc: 'Gas pipe connection point' },
+            { id: 293, name: 'storage_capacity_indicator', hex: '#CCCCCC', desc: 'Storage capacity indicator (e.g., "50/100")' },
+            { id: 294, name: 'auto_turret_ammo_indicator', hex: '#FF9933', desc: 'Auto-turret ammunition indicator' },
+            
+            // Special Menu Interfaces (295-319)
+            { id: 295, name: 'tek_element_icon', hex: '#CC66FF', desc: 'Tek element resource icon' },
+            { id: 296, name: 'tek_teleporter_interface', hex: '#CC66FF', desc: 'Tek teleporter menu' },
+            { id: 297, name: 'tek_transmitter_interface', hex: '#CC66FF', desc: 'Tek transmitter menu' },
+            { id: 298, name: 'tek_replicator_interface', hex: '#CC66FF', desc: 'Tek replicator crafting menu' },
+            { id: 299, name: 'obelisk_interface', hex: '#FF3333', desc: 'Obelisk terminal interface' },
+            { id: 300, name: 'tribute_terminal_interface', hex: '#FF9933', desc: 'Tribute terminal interface' },
+            { id: 301, name: 'city_terminal_interface', hex: '#6699FF', desc: 'City terminal interface' },
+            { id: 302, name: 'mission_terminal_interface', hex: '#FFFF00', desc: 'Mission terminal interface' },
+            { id: 303, name: 'cryofridge_interface', hex: '#66CCFF', desc: 'Cryofridge storage interface' },
+            { id: 304, name: 'cooking_pot_interface', hex: '#FF9966', desc: 'Cooking pot recipe interface' },
+            { id: 305, name: 'industrial_cooker_interface', hex: '#FF6633', desc: 'Industrial cooker interface' },
+            { id: 306, name: 'fabricator_interface', hex: '#6699CC', desc: 'Fabricator crafting interface' },
+            { id: 307, name: 'chemistry_bench_interface', hex: '#66CC99', desc: 'Chemistry bench interface' },
+            { id: 308, name: 'tek_cloning_interface', hex: '#FF66FF', desc: 'Tek cloning chamber interface' },
+            { id: 309, name: 'tek_dedicated_storage', hex: '#9966CC', desc: 'Tek dedicated storage interface' },
+            { id: 310, name: 'tek_trough_interface', hex: '#CC99FF', desc: 'Tek trough interface' },
+            { id: 311, name: 'upload_creature_button', hex: '#66CCFF', desc: 'Upload creature button' },
+            { id: 312, name: 'download_creature_button', hex: '#66CCFF', desc: 'Download creature button' },
+            { id: 313, name: 'upload_item_button', hex: '#99CCFF', desc: 'Upload item button' },
+            { id: 314, name: 'download_item_button', hex: '#99CCFF', desc: 'Download item button' },
+            { id: 315, name: 'boss_arena_teleport_button', hex: '#FF3333', desc: 'Boss arena teleport button' },
+            { id: 316, name: 'genesis_mission_list', hex: '#FFFF66', desc: 'Genesis mission selection list' },
+            { id: 317, name: 'fjordur_realm_portal', hex: '#CC66FF', desc: 'Fjordur realm portal interface' },
+            { id: 318, name: 'cave_entrance_transfer', hex: '#996633', desc: 'Cave entrance transfer interface' },
+            { id: 319, name: 'ascension_terminal', hex: '#FFCC33', desc: 'Ascension terminal interface' },
+            
+            // Character Stats Interface (320-339)
+            { id: 320, name: 'character_stat_health', hex: '#FF3333', desc: 'Health stat in character menu' },
+            { id: 321, name: 'character_stat_stamina', hex: '#33CC33', desc: 'Stamina stat in character menu' },
+            { id: 322, name: 'character_stat_oxygen', hex: '#3399FF', desc: 'Oxygen stat in character menu' },
+            { id: 323, name: 'character_stat_food', hex: '#FF9933', desc: 'Food stat in character menu' },
+            { id: 324, name: 'character_stat_water', hex: '#3399FF', desc: 'Water stat in character menu' },
+            { id: 325, name: 'character_stat_weight', hex: '#CC66CC', desc: 'Weight stat in character menu' },
+            { id: 326, name: 'character_stat_melee', hex: '#FF6633', desc: 'Melee damage stat in character menu' },
+            { id: 327, name: 'character_stat_speed', hex: '#66CC99', desc: 'Movement speed stat in character menu' },
+            { id: 328, name: 'character_stat_fortitude', hex: '#996633', desc: 'Fortitude stat in character menu' },
+            { id: 329, name: 'character_stat_crafting', hex: '#6699CC', desc: 'Crafting skill stat in character menu' },
+            { id: 330, name: 'character_level_display', hex: '#FFCC00', desc: 'Character level display' },
+            { id: 331, name: 'character_xp_bar', hex: '#FFFF00', desc: 'Character XP bar' },
+            { id: 332, name: 'character_xp_to_next_level', hex: '#FFFFFF', desc: 'XP needed for next level' },
+            { id: 333, name: 'character_stat_points', hex: '#FFCC00', desc: 'Available stat points counter' },
+            { id: 334, name: 'character_stat_increase_button', hex: '#66CC66', desc: 'Stat increase button' },
+            { id: 335, name: 'character_total_level_cap', hex: '#FFCC33', desc: 'Total level cap display' },
+            { id: 336, name: 'character_ascension_level', hex: '#FF9933', desc: 'Ascension level indicator' },
+            { id: 337, name: 'character_chibi_level', hex: '#FF99CC', desc: 'Chibi-pet level display' },
+            { id: 338, name: 'character_mutation_counter', hex: '#FF66FF', desc: 'Character mutation counter' },
+            { id: 339, name: 'character_mindwipe_reminder', hex: '#FF99CC', desc: 'Mindwipe availability reminder' },
+            
+            // Tribe Interface Elements (340-359)
+            { id: 340, name: 'tribe_name_display', hex: '#CCCCCC', desc: 'Tribe name display' },
+            { id: 341, name: 'tribe_rank_display', hex: '#FFCC33', desc: 'Player\'s tribe rank display' },
+            { id: 342, name: 'tribe_member_list', hex: '#333333', desc: 'Tribe member list' },
+            { id: 343, name: 'tribe_member_entry', hex: '#4D4D4D', desc: 'Individual tribe member entry' },
+            { id: 344, name: 'tribe_member_online', hex: '#33CC33', desc: 'Online tribe member indicator' },
+            { id: 345, name: 'tribe_member_offline', hex: '#CC3333', desc: 'Offline tribe member indicator' },
+            { id: 346, name: 'tribe_log_tab', hex: '#4D4D4D', desc: 'Tribe log tab' },
+            { id: 347, name: 'tribe_log_entry', hex: '#CCCCCC', desc: 'Individual tribe log entry' },
+            { id: 348, name: 'tribe_alliance_tab', hex: '#4D4D4D', desc: 'Tribe alliance management tab' },
+            { id: 349, name: 'tribe_governance_tab', hex: '#4D4D4D', desc: 'Tribe governance settings tab' },
+            { id: 350, name: 'tribe_rank_management', hex: '#4D4D4D', desc: 'Tribe rank management interface' },
+            { id: 351, name: 'tribe_permissions_setting', hex: '#6699CC', desc: 'Tribe permissions settings' },
+            { id: 352, name: 'tribe_pincode_setting', hex: '#FFCC00', desc: 'Tribe PIN code setting' },
+            { id: 353, name: 'tribe_tame_claim_setting', hex: '#FFCC66', desc: 'Tribe tame claiming setting' },
+            { id: 354, name: 'tribe_structure_ownership', hex: '#99CCFF', desc: 'Tribe structure ownership setting' },
+            { id: 355, name: 'tribe_invitation_button', hex: '#66CC66', desc: 'Invite to tribe button' },
+            { id: 356, name: 'tribe_kick_button', hex: '#CC3333', desc: 'Remove from tribe button' },
+            { id: 357, name: 'tribe_promote_button', hex: '#66CC66', desc: 'Promote member button' },
+            { id: 358, name: 'tribe_demote_button', hex: '#CC6666', desc: 'Demote member button' },
+            { id: 359, name: 'tribe_leave_button', hex: '#CC3333', desc: 'Leave tribe button' },
+            
+            // Common Resources (360-399)
+            { id: 360, name: 'inventory_item_stone', hex: '#CCCCCC', desc: 'Stone resource' },
+            { id: 361, name: 'inventory_item_wood', hex: '#CC9966', desc: 'Wood resource' },
+            { id: 362, name: 'inventory_item_thatch', hex: '#FFCC99', desc: 'Thatch resource' },
+            { id: 363, name: 'inventory_item_fiber', hex: '#33CC33', desc: 'Fiber resource' },
+            { id: 364, name: 'inventory_item_hide', hex: '#996633', desc: 'Hide resource' },
+            { id: 365, name: 'inventory_item_metal', hex: '#CCCCFF', desc: 'Metal resource' },
+            { id: 366, name: 'inventory_item_flint', hex: '#999999', desc: 'Flint resource' },
+            { id: 367, name: 'inventory_item_crystal', hex: '#99FFFF', desc: 'Crystal resource' },
+            { id: 368, name: 'inventory_item_obsidian', hex: '#666666', desc: 'Obsidian resource' },
+            { id: 369, name: 'inventory_item_silica_pearls', hex: '#FFFFFF', desc: 'Silica Pearls resource' },
+            { id: 370, name: 'inventory_item_oil', hex: '#333333', desc: 'Oil resource' },
+            { id: 371, name: 'inventory_item_element', hex: '#CC66FF', desc: 'Element resource' },
+            { id: 372, name: 'inventory_item_element_shard', hex: '#CC99FF', desc: 'Element Shard resource' },
+            { id: 373, name: 'inventory_item_element_dust', hex: '#CCCCFF', desc: 'Element Dust resource' },
+            { id: 374, name: 'inventory_item_polymer', hex: '#CCCCFF', desc: 'Polymer resource' },
+            { id: 375, name: 'inventory_item_organic_polymer', hex: '#CCFFCC', desc: 'Organic Polymer resource' },
+            { id: 376, name: 'inventory_item_cementing_paste', hex: '#CCCCCC', desc: 'Cementing Paste resource' },
+            { id: 377, name: 'inventory_item_chitin', hex: '#FFCC99', desc: 'Chitin resource' },
+            { id: 378, name: 'inventory_item_keratin', hex: '#FFCC99', desc: 'Keratin resource' },
+            { id: 379, name: 'inventory_item_pelt', hex: '#CC9966', desc: 'Pelt resource' },
+            { id: 380, name: 'inventory_item_electronics', hex: '#CCCCFF', desc: 'Electronics resource' },
+            { id: 381, name: 'inventory_item_gasoline', hex: '#FFCC00', desc: 'Gasoline resource' },
+            { id: 382, name: 'inventory_item_metal_ingot', hex: '#CCCCFF', desc: 'Metal Ingot resource' },
+            { id: 383, name: 'inventory_item_narcotics', hex: '#9933CC', desc: 'Narcotics item' },
+            { id: 384, name: 'inventory_item_stimulant', hex: '#66CCFF', desc: 'Stimulant item' },
+            { id: 385, name: 'inventory_item_raw_meat', hex: '#CC3333', desc: 'Raw Meat food' },
+            { id: 386, name: 'inventory_item_cooked_meat', hex: '#993333', desc: 'Cooked Meat food' },
+            { id: 387, name: 'inventory_item_spoiled_meat', hex: '#666633', desc: 'Spoiled Meat' },
+            { id: 388, name: 'inventory_item_raw_prime', hex: '#FF3333', desc: 'Raw Prime Meat' },
+            { id: 389, name: 'inventory_item_cooked_prime', hex: '#CC3333', desc: 'Cooked Prime Meat' },
+            { id: 390, name: 'inventory_item_kibble', hex: '#FFCC99', desc: 'Kibble food' },
+            { id: 391, name: 'inventory_item_berry_mejo', hex: '#CC3399', desc: 'Mejoberry' },
+            { id: 392, name: 'inventory_item_berry_narco', hex: '#9933CC', desc: 'Narcoberry' },
+            { id: 393, name: 'inventory_item_berry_stim', hex: '#66CCFF', desc: 'Stimberry' },
+            { id: 394, name: 'inventory_item_berry_amar', hex: '#FFCC00', desc: 'Amarberry' },
+            { id: 395, name: 'inventory_item_berry_azul', hex: '#3399FF', desc: 'Azulberry' },
+            { id: 396, name: 'inventory_item_berry_tinto', hex: '#CC3333', desc: 'Tintoberry' },
+            { id: 397, name: 'inventory_item_rare_flower', hex: '#FF99CC', desc: 'Rare Flower' },
+            { id: 398, name: 'inventory_item_rare_mushroom', hex: '#FFCC99', desc: 'Rare Mushroom' },
+            { id: 399, name: 'inventory_item_sap', hex: '#FFCC66', desc: 'Tree Sap' },
+            
+            // Tools, Weapons & Equipment (400-449)
+            { id: 400, name: 'inventory_item_stone_pick', hex: '#CCCCCC', desc: 'Stone Pickaxe' },
+            { id: 401, name: 'inventory_item_stone_hatchet', hex: '#CCCCCC', desc: 'Stone Hatchet' },
+            { id: 402, name: 'inventory_item_metal_pick', hex: '#CCCCFF', desc: 'Metal Pickaxe' },
+            { id: 403, name: 'inventory_item_metal_hatchet', hex: '#CCCCFF', desc: 'Metal Hatchet' },
+            { id: 404, name: 'inventory_item_spear', hex: '#CC9966', desc: 'Spear' },
+            { id: 405, name: 'inventory_item_pike', hex: '#CCCCFF', desc: 'Pike' },
+            { id: 406, name: 'inventory_item_bow', hex: '#CC9966', desc: 'Bow' },
+            { id: 407, name: 'inventory_item_crossbow', hex: '#CC9966', desc: 'Crossbow' },
+            { id: 408, name: 'inventory_item_simple_pistol', hex: '#CCCCFF', desc: 'Simple Pistol' },
+            { id: 409, name: 'inventory_item_longneck_rifle', hex: '#CCCCFF', desc: 'Longneck Rifle' },
+            { id: 410, name: 'inventory_item_shotgun', hex: '#CCCCFF', desc: 'Shotgun' },
+            { id: 411, name: 'inventory_item_fab_rifle', hex: '#CCCCFF', desc: 'Fabricated Rifle' },
+            { id: 412, name: 'inventory_item_rocket_launcher', hex: '#CCCCFF', desc: 'Rocket Launcher' },
+            { id: 413, name: 'inventory_item_c4_charge', hex: '#CC3333', desc: 'C4 Explosive' },
+            { id: 414, name: 'inventory_item_grappling_hook', hex: '#CCCCFF', desc: 'Grappling Hook' },
+            { id: 415, name: 'inventory_item_parachute', hex: '#FFCCCC', desc: 'Parachute' },
+            { id: 416, name: 'inventory_item_whip', hex: '#CC9966', desc: 'Whip' },
+            { id: 417, name: 'inventory_item_bola', hex: '#CC9966', desc: 'Bola' },
+            { id: 418, name: 'inventory_item_sickle', hex: '#CCCCFF', desc: 'Sickle' },
+            { id: 419, name: 'inventory_item_harpoon', hex: '#CCCCFF', desc: 'Harpoon Gun' },
+            { id: 420, name: 'inventory_item_tranq_arrow', hex: '#9933CC', desc: 'Tranquilizer Arrow' },
+            { id: 421, name: 'inventory_item_tranq_dart', hex: '#9933CC', desc: 'Tranquilizer Dart' },
+            { id: 422, name: 'inventory_item_simple_bullet', hex: '#CCCCFF', desc: 'Simple Bullet' },
+            { id: 423, name: 'inventory_item_advanced_bullet', hex: '#CCCCFF', desc: 'Advanced Rifle Bullet' },
+            { id: 424, name: 'inventory_item_shotgun_shell', hex: '#CC6633', desc: 'Shotgun Shell' },
+            { id: 425, name: 'inventory_item_flamethrower', hex: '#FF6633', desc: 'Flamethrower' },
+            { id: 426, name: 'inventory_item_chainsaw', hex: '#CC3333', desc: 'Chainsaw' },
+            { id: 427, name: 'inventory_item_mining_drill', hex: '#CCCCFF', desc: 'Mining Drill' },
+            { id: 428, name: 'inventory_item_tek_rifle', hex: '#CC66FF', desc: 'Tek Rifle' },
+            { id: 429, name: 'inventory_item_tek_sword', hex: '#CC66FF', desc: 'Tek Sword' },
+            { id: 430, name: 'inventory_item_tek_grenade', hex: '#CC66FF', desc: 'Tek Grenade' },
+            { id: 431, name: 'inventory_item_compound_bow', hex: '#CC9966', desc: 'Compound Bow' },
+            { id: 432, name: 'inventory_item_sword', hex: '#CCCCFF', desc: 'Metal Sword' },
+            { id: 433, name: 'inventory_item_shield', hex: '#CCCCFF', desc: 'Shield' },
+            { id: 434, name: 'inventory_item_waterskin', hex: '#996633', desc: 'Waterskin' },
+            { id: 435, name: 'inventory_item_canteen', hex: '#CCCCFF', desc: 'Canteen' },
+            { id: 436, name: 'inventory_item_spyglass', hex: '#CCCCFF', desc: 'Spyglass' },
+            { id: 437, name: 'inventory_item_compass', hex: '#CCCCFF', desc: 'Compass' },
+            { id: 438, name: 'inventory_item_gps', hex: '#CCCCFF', desc: 'GPS Device' },
+            { id: 439, name: 'inventory_item_radio', hex: '#CCCCFF', desc: 'Radio' },
+            { id: 440, name: 'inventory_item_gas_collector', hex: '#CCCCFF', desc: 'Gas Collector' },
+            { id: 441, name: 'inventory_item_glider_suit', hex: '#CCCCCC', desc: 'Glider Suit' },
+            { id: 442, name: 'inventory_item_tek_hover_skiff', hex: '#CC66FF', desc: 'Tek Hover Skiff' },
+            { id: 443, name: 'inventory_item_gas_mask', hex: '#666666', desc: 'Gas Mask' },
+            { id: 444, name: 'inventory_item_scuba_mask', hex: '#3399FF', desc: 'Scuba Mask' },
+            { id: 445, name: 'inventory_item_scuba_tank', hex: '#3399FF', desc: 'Scuba Tank' },
+            { id: 446, name: 'inventory_item_fur_armor', hex: '#FFCC99', desc: 'Fur Armor (generic)' },
+            { id: 447, name: 'inventory_item_ghillie_armor', hex: '#669933', desc: 'Ghillie Armor (generic)' },
+            { id: 448, name: 'inventory_item_riot_armor', hex: '#333333', desc: 'Riot Armor (generic)' },
+            { id: 449, name: 'inventory_item_tek_armor', hex: '#CC66FF', desc: 'Tek Armor (generic)' },
+            
+            // Armor & Clothing (450-474)
+            { id: 450, name: 'inventory_item_cloth_helmet', hex: '#CCCCCC', desc: 'Cloth Helmet' },
+            { id: 451, name: 'inventory_item_cloth_shirt', hex: '#CCCCCC', desc: 'Cloth Shirt' },
+            { id: 452, name: 'inventory_item_cloth_pants', hex: '#CCCCCC', desc: 'Cloth Pants' },
+            { id: 453, name: 'inventory_item_cloth_boots', hex: '#CCCCCC', desc: 'Cloth Boots' },
+            { id: 454, name: 'inventory_item_hide_helmet', hex: '#996633', desc: 'Hide Helmet' },
+            { id: 455, name: 'inventory_item_hide_chest', hex: '#996633', desc: 'Hide Chestpiece' },
+            { id: 456, name: 'inventory_item_hide_pants', hex: '#996633', desc: 'Hide Pants' },
+            { id: 457, name: 'inventory_item_hide_boots', hex: '#996633', desc: 'Hide Boots' },
+            { id: 458, name: 'inventory_item_chitin_helmet', hex: '#FFCC99', desc: 'Chitin Helmet' },
+            { id: 459, name: 'inventory_item_chitin_chest', hex: '#FFCC99', desc: 'Chitin Chestpiece' },
+            { id: 460, name: 'inventory_item_chitin_pants', hex: '#FFCC99', desc: 'Chitin Pants' },
+            { id: 461, name: 'inventory_item_chitin_boots', hex: '#FFCC99', desc: 'Chitin Boots' },
+            { id: 462, name: 'inventory_item_flak_helmet', hex: '#CCCCFF', desc: 'Flak Helmet' },
+            { id: 463, name: 'inventory_item_flak_chest', hex: '#CCCCFF', desc: 'Flak Chestpiece' },
+            { id: 464, name: 'inventory_item_flak_pants', hex: '#CCCCFF', desc: 'Flak Pants' },
+            { id: 465, name: 'inventory_item_flak_boots', hex: '#CCCCFF', desc: 'Flak Boots' },
+            { id: 466, name: 'inventory_item_riot_helmet', hex: '#333333', desc: 'Riot Helmet' },
+            { id: 467, name: 'inventory_item_riot_chest', hex: '#333333', desc: 'Riot Chestpiece' },
+            { id: 468, name: 'inventory_item_riot_pants', hex: '#333333', desc: 'Riot Pants' },
+            { id: 469, name: 'inventory_item_riot_boots', hex: '#333333', desc: 'Riot Boots' },
+            { id: 470, name: 'inventory_item_tek_helmet', hex: '#CC66FF', desc: 'Tek Helmet' },
+            { id: 471, name: 'inventory_item_tek_chest', hex: '#CC66FF', desc: 'Tek Chestpiece' },
+            { id: 472, name: 'inventory_item_tek_pants', hex: '#CC66FF', desc: 'Tek Pants' },
+            { id: 473, name: 'inventory_item_tek_boots', hex: '#CC66FF', desc: 'Tek Boots' },
+            { id: 474, name: 'inventory_item_tek_gauntlets', hex: '#CC66FF', desc: 'Tek Gauntlets' },
+            
+            // Structures & Building (475-499)
+            { id: 475, name: 'inventory_item_thatch_foundation', hex: '#FFCC99', desc: 'Thatch Foundation' },
+            { id: 476, name: 'inventory_item_wood_foundation', hex: '#CC9966', desc: 'Wood Foundation' },
+            { id: 477, name: 'inventory_item_stone_foundation', hex: '#CCCCCC', desc: 'Stone Foundation' },
+            { id: 478, name: 'inventory_item_metal_foundation', hex: '#CCCCFF', desc: 'Metal Foundation' },
+            { id: 479, name: 'inventory_item_tek_foundation', hex: '#CC66FF', desc: 'Tek Foundation' },
+            { id: 480, name: 'inventory_item_wall', hex: '#CCCCCC', desc: 'Wall (generic)' },
+            { id: 481, name: 'inventory_item_ceiling', hex: '#CCCCCC', desc: 'Ceiling (generic)' },
+            { id: 482, name: 'inventory_item_doorframe', hex: '#CCCCCC', desc: 'Doorframe (generic)' },
+            { id: 483, name: 'inventory_item_door', hex: '#CCCCCC', desc: 'Door (generic)' },
+            { id: 484, name: 'inventory_item_campfire', hex: '#FF6633', desc: 'Campfire' },
+            { id: 485, name: 'inventory_item_fireplace', hex: '#CC3333', desc: 'Stone Fireplace' },
+            { id: 486, name: 'inventory_item_cooking_pot', hex: '#CCCCCC', desc: 'Cooking Pot' },
+            { id: 487, name: 'inventory_item_mortar_pestle', hex: '#CCCCCC', desc: 'Mortar and Pestle' },
+            { id: 488, name: 'inventory_item_forge', hex: '#CC6633', desc: 'Refining Forge' },
+            { id: 489, name: 'inventory_item_smithy', hex: '#CCCCCC', desc: 'Smithy' },
+            { id: 490, name: 'inventory_item_fabricator', hex: '#CCCCFF', desc: 'Fabricator' },
+            { id: 491, name: 'inventory_item_generator', hex: '#CCCCFF', desc: 'Electrical Generator' },
+            { id: 492, name: 'inventory_item_ind_forge', hex: '#CC6633', desc: 'Industrial Forge' },
+            { id: 493, name: 'inventory_item_ind_grill', hex: '#CCCCFF', desc: 'Industrial Grill' },
+            { id: 494, name: 'inventory_item_chem_bench', hex: '#CCCCFF', desc: 'Chemistry Bench' },
+            { id: 495, name: 'inventory_item_storage_box', hex: '#CC9966', desc: 'Storage Box' },
+            { id: 496, name: 'inventory_item_large_box', hex: '#CCCCCC', desc: 'Large Storage Box' },
+            { id: 497, name: 'inventory_item_vault', hex: '#CCCCFF', desc: 'Vault' },
+            { id: 498, name: 'inventory_item_refrigerator', hex: '#CCCCFF', desc: 'Refrigerator' },
+            { id: 499, name: 'inventory_item_preserving_bin', hex: '#CCCCCC', desc: 'Preserving Bin' },
+            
+            // Creature-Related Items (500-519)
+            { id: 500, name: 'inventory_item_saddle', hex: '#996633', desc: 'Saddle (generic)' },
+            { id: 501, name: 'inventory_item_platform_saddle', hex: '#CC9966', desc: 'Platform Saddle (generic)' },
+            { id: 502, name: 'inventory_item_tek_saddle', hex: '#CC66FF', desc: 'Tek Saddle (generic)' },
+            { id: 503, name: 'inventory_item_cryopod', hex: '#66CCFF', desc: 'Cryopod' },
+            { id: 504, name: 'inventory_item_cryopod_filled', hex: '#3399FF', desc: 'Filled Cryopod' },
+            { id: 505, name: 'inventory_item_egg', hex: '#FFCC66', desc: 'Creature Egg (generic)' },
+            { id: 506, name: 'inventory_item_fert_egg', hex: '#FFCC00', desc: 'Fertilized Egg (generic)' },
+            { id: 507, name: 'inventory_item_kibble_basic', hex: '#CCCC99', desc: 'Basic Kibble' },
+            { id: 508, name: 'inventory_item_kibble_simple', hex: '#CCCC66', desc: 'Simple Kibble' },
+            { id: 509, name: 'inventory_item_kibble_regular', hex: '#CCCC33', desc: 'Regular Kibble' },
+            { id: 510, name: 'inventory_item_kibble_superior', hex: '#CCCC00', desc: 'Superior Kibble' },
+            { id: 511, name: 'inventory_item_kibble_exceptional', hex: '#999900', desc: 'Exceptional Kibble' },
+            { id: 512, name: 'inventory_item_kibble_extraordinary', hex: '#666600', desc: 'Extraordinary Kibble' },
+            { id: 513, name: 'inventory_item_breeding_pair', hex: '#FF99CC', desc: 'Breeding Pair icon' },
+            { id: 514, name: 'inventory_item_imprint_food', hex: '#FF99CC', desc: 'Imprint food request item' },
+            { id: 515, name: 'inventory_item_leash', hex: '#CCCCCC', desc: 'Creature Leash' },
+            { id: 516, name: 'inventory_item_creature_finder', hex: '#FFCC00', desc: 'Creature Finder' },
+            { id: 517, name: 'inventory_item_taxidermy_tool', hex: '#CCCCCC', desc: 'Taxidermy Tool' },
+            { id: 518, name: 'inventory_item_creature_mask', hex: '#FFCC99', desc: 'Creature Costume (generic)' },
+            { id: 519, name: 'inventory_item_taming_food', hex: '#FFCC66', desc: 'Taming Food (generic)' },
+            
+            // Advanced Elements & Systems (520-539)
+            { id: 520, name: 'tek_generator_interface', hex: '#CC66FF', desc: 'Tek Generator Interface' },
+            { id: 521, name: 'tek_crop_plot_interface', hex: '#CC66FF', desc: 'Tek Crop Plot Interface' },
+            { id: 522, name: 'creature_camera_view', hex: '#99CCFF', desc: 'Creature-mounted camera view' },
+            { id: 523, name: 'tek_sensor_interface', hex: '#CC66FF', desc: 'Tek Sensor interface' },
+            { id: 524, name: 'tek_remote_camera', hex: '#CC66FF', desc: 'Tek Remote Surveillance' },
+            { id: 525, name: 'holo_projector_interface', hex: '#66CCFF', desc: 'Holo-Projector interface' },
+            { id: 526, name: 'manage_hex_store', hex: '#FFCC00', desc: 'Manage Genesis Hexagon Store' },
+            { id: 527, name: 'megachelon_planter', hex: '#99CC66', desc: 'Megachelon back planter interface' },
+            { id: 528, name: 'aquatic_tames_oxygen_interface', hex: '#66CCFF', desc: 'Aquatic creature oxygen interface' },
+            { id: 529, name: 'genesis_shop_interface', hex: '#FFCC00', desc: 'Genesis HLNA Shop interface' },
+            { id: 530, name: 'mission_tracker', hex: '#FFFF00', desc: 'Mission objective tracker' },
+            { id: 531, name: 'boss_fight_timer', hex: '#FF3333', desc: 'Boss fight time remaining' },
+            { id: 532, name: 'astrodelphis_energy', hex: '#66FFFF', desc: 'Astrodelphis stardust energy meter' },
+            { id: 533, name: 'noglin_brain_jack_interface', hex: '#FF66CC', desc: 'Noglin brain-jack interface' },
+            { id: 534, name: 'exo_mek_interface', hex: '#CC66FF', desc: 'Exo-Mek control interface' },
+            { id: 535, name: 'maewing_baby_milk_meter', hex: '#FFFFFF', desc: 'Maewing milk storage meter' },
+            { id: 536, name: 'shadowmane_charge_meter', hex: '#FFCC00', desc: 'Shadowmane charge meter' },
+            { id: 537, name: 'gacha_crafting_interface', hex: '#99CCFF', desc: 'Gacha item production interface' },
+            { id: 538, name: 'stryder_interface', hex: '#CCCCFF', desc: 'Stryder harvesting interface' },
+            { id: 539, name: 'enforcer_interface', hex: '#66CCFF', desc: 'Enforcer interface' },
+            
+            // Event-Specific UI (540-549)
+            { id: 540, name: 'holiday_event_interface', hex: '#FF3333', desc: 'Holiday event UI' },
+            { id: 541, name: 'easter_egg_hunt_tracker', hex: '#FFCC99', desc: 'Easter egg hunt progress tracker' },
+            { id: 542, name: 'summer_bash_interface', hex: '#FFCC00', desc: 'Summer bash event interface' },
+            { id: 543, name: 'fear_evolved_interface', hex: '#FF6633', desc: 'Fear Evolved event interface' },
+            { id: 544, name: 'winter_wonderland_interface', hex: '#66CCFF', desc: 'Winter Wonderland interface' },
+            { id: 545, name: 'valentines_day_interface', hex: '#FF99CC', desc: 'Valentine\'s Day event interface' },
+            { id: 546, name: 'eggcellent_adventure_ui', hex: '#FFCC99', desc: 'Eggcellent Adventure UI' },
+            { id: 547, name: 'genesis_race_timer', hex: '#FFFF00', desc: 'Genesis race mission timer' },
+            { id: 548, name: 'genesis_hunt_tracker', hex: '#FFCC33', desc: 'Genesis hunt mission tracker' },
+            { id: 549, name: 'genesis_fishing_meter', hex: '#3399FF', desc: 'Genesis fishing mission meter' }
+        ];
+
+        // DOM Elements
+        const colorPreview = document.getElementById('colorPreview');
+        const hexInput = document.getElementById('hexValue');
+        const rgbInput = document.getElementById('rgbValue');
+        const hslInput = document.getElementById('hslValue');
+        const colorList = document.getElementById('colorList');
+
+        // Initialize the color list
+        function initColorList() {
+            renderColors(arkColors);
+            
+            // Search functionality
+            function performSearch() {
+                const idTerm = document.getElementById('searchId').value.toLowerCase();
+                const classTerm = document.getElementById('searchClass').value.toLowerCase();
+                const nameTerm = document.getElementById('searchName').value.toLowerCase();
+                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+                
+                const filteredColors = arkColors.filter(color => {
+                    // ID search (exact match or partial match for multi-digit)
+                    if (idTerm && !color.id.toString().includes(idTerm)) {
+                        return false;
+                    }
+                    
+                    // Class search (partial match in class name)
+                    if (classTerm && !color.name.toLowerCase().includes(classTerm)) {
+                        return false;
+                    }
+                    
+                    // Name/Hex search (partial match in name or hex)
+                    if (nameTerm && 
+                        !color.name.toLowerCase().includes(nameTerm) && 
+                        !color.hex.toLowerCase().includes(nameTerm) &&
+                        !color.desc.toLowerCase().includes(nameTerm)) {
+                        return false;
+                    }
+                    
+                    // Category filter
+                    if (activeCategory !== 'all') {
+                        const [min, max] = activeCategory.split('-').map(Number);
+                        return color.id >= min && color.id <= max;
+                    }
+                    
+                    return true;
+                });
+                
+                renderColors(filteredColors);
+            }
+            
+            // Add event listeners for all search inputs
+            document.getElementById('searchId').addEventListener('input', performSearch);
+            document.getElementById('searchClass').addEventListener('input', performSearch);
+            document.getElementById('searchName').addEventListener('input', performSearch);
+            
+            // Add category filter click handlers
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Trigger search to update the filtered list
+                    performSearch();
+                });
+            });
+            
+            // Initialize with first category active
+            document.querySelector('.category-btn').classList.add('active');
+            
+            // Initial render
+            performSearch();
+            
+            // Function to render colors in a compact list
+            function renderColors(colors) {
+                colorList.innerHTML = '';
+                
+                if (colors.length === 0) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = 'No colors match your search criteria.';
+                    colorList.appendChild(noResults);
+                    return;
+                }
+                
+                colors.forEach(color => {
+                    const colorItem = document.createElement('div');
+                    colorItem.className = 'color-item';
+                    
+                    // Create color swatch
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch';
+                    swatch.style.backgroundColor = color.hex;
+                    
+                    // Create ID span
+                    const idSpan = document.createElement('span');
+                    idSpan.className = 'color-id';
+                    idSpan.textContent = `${color.id}:`;
+                    
+                    // Create name span
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'color-name';
+                    nameSpan.textContent = color.name;
+                    nameSpan.title = color.name;  // Add tooltip for full name
+                    
+                    // Create hex span
+                    const hexSpan = document.createElement('span');
+                    hexSpan.className = 'color-hex';
+                    hexSpan.textContent = `(${color.hex})`;
+                    
+                    // Create description span
+                    const descSpan = document.createElement('span');
+                    descSpan.className = 'color-desc';
+                    descSpan.textContent = color.desc;
+                    descSpan.title = color.desc;  // Add tooltip for full description
+                    
+                    // Assemble the item
+                    colorItem.appendChild(swatch);
+                    colorItem.appendChild(idSpan);
+                    colorItem.appendChild(nameSpan);
+                    colorItem.appendChild(hexSpan);
+                    colorItem.appendChild(descSpan);
+                    
+                    // Add click handler to show color details
+                    colorItem.addEventListener('click', () => {
+                        colorPreview.style.backgroundColor = color.hex;
+                        hexInput.value = color.hex;
+                        
+                        // Convert hex to RGB
+                        const r = parseInt(color.hex.slice(1, 3), 16);
+                        const g = parseInt(color.hex.slice(3, 5), 16);
+                        const b = parseInt(color.hex.slice(5, 7), 16);
+                        rgbInput.value = `RGB(${r}, ${g}, ${b})`;
+                        
+                        // Convert RGB to HSL
+                        const hsl = rgbToHsl(r, g, b);
+                        hslInput.value = `HSL(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+                        
+                        // Copy full format to clipboard
+                        const format = `${color.id}: ${color.name} (${color.hex}) # ${color.desc}`;
+                        navigator.clipboard.writeText(format);
+                        
+                        // Show feedback
+                        const originalText = colorPreview.textContent;
+                        colorPreview.textContent = 'Copied to clipboard!';
+                        setTimeout(() => {
+                            colorPreview.textContent = originalText;
+                        }, 2000);
+                    });
+                    
+                    // Add tooltip with full text for when it overflows
+                    colorItem.title = `${color.id}: ${color.name} (${color.hex}) # ${color.desc}`;
+                    
+                    colorList.appendChild(colorItem);
+                });
+            }
+            
+            // Helper function to convert RGB to HSL
+            function rgbToHsl(r, g, b) {
+                r /= 255, g /= 255, b /= 255;
+                const max = Math.max(r, g, b), min = Math.min(r, g, b);
+                let h, s, l = (max + min) / 2;
+
+                if (max === min) {
+                    h = s = 0; // achromatic
+                } else {
+                    const d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+
+
+                return {
+                    h: Math.round(h * 360),
+                    s: Math.round(s * 100),
+                    l: Math.round(l * 100)
+                };
+            }
+            
+            // Initialize the color list
+            return {
+                init: function() {
+                    // Initial render
+                    performSearch();
+                }
+            };
+        }
+        
+        // Initialize when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorBrowser = initColorList();
+            colorBrowser.init();
+        });
+    </script>
+</body>
+</html>

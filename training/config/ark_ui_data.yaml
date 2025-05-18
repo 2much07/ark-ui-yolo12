@@ -599,4 +599,53 @@ names:
   546: eggcellent_adventure_ui   # Eggcellent Adventure UI
   547: genesis_race_timer        # Genesis race mission timer
   548: genesis_hunt_tracker      # Genesis hunt mission tracker
-  549: genesis_fishing_meter     # Genesis fishing mission meter
+
+
+def get_class_dict():
+    """Get the class dictionary mapping class IDs to class names."""
+    return {i: name for i, name in enumerate(ARK_UI_CLASSES)}
+
+def generate_data_yaml(dataset_path, output_path):
+    """
+    Generate the data.yaml file for YOLOv11 training.
+    
+    Args:
+        dataset_path: Path to the dataset directory
+        output_path: Path to save the YAML file
+    """
+    # Create class dictionary
+    class_dict = get_class_dict()
+    
+    # Create yaml content
+    data = {
+        'path': os.path.abspath(dataset_path),
+        'train': os.path.join('train', 'images'),
+        'val': os.path.join('val', 'images'),
+        'names': class_dict
+    }
+    
+    # Create directory if it doesn't exist
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    # Write yaml file
+    with open(output_path, 'w') as f:
+        yaml.dump(data, f, sort_keys=False)
+    
+    print(f"Created data.yaml at {output_path}")
+    return output_path
+
+def load_classes_from_yaml(yaml_path):
+    """Load class names from a YAML file."""
+    if not os.path.exists(yaml_path):
+        print(f"Warning: {yaml_path} not found")
+        return None
+    
+    with open(yaml_path, 'r') as f:
+        data = yaml.safe_load(f)
+    
+    return data.get('names', None)
+
+# Example usage
+if __name__ == "__main__":
+    # Generate a sample data.yaml file
+    generate_data_yaml("dataset_yolo", "config/ark_ui_data.yaml")

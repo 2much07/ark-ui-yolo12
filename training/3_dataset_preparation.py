@@ -1,6 +1,6 @@
 """
 Dataset preparation for ARK UI Detection.
-This file contains the comprehensive list of UI classes for ARK: Survival Ascended.
+Uses the central class definitions from utils/ark_ui_classes.py
 """
 import os
 import shutil
@@ -10,122 +10,9 @@ from pathlib import Path
 import argparse
 import sys
 
-# Enhanced Super Complete ARK UI Class List
-ARK_UI_CLASSES = [
-    # Basic UI Structural Elements (0-9)
-    'ui_panel_background',          # Base panel background
-    'ui_panel_border',              # Panel border/frame
-    'ui_scrollbar',                 # Scrollbar element
-    'ui_scrollbar_handle',          # Scrollbar drag handle
-    'ui_divider',                   # Visual divider between sections
-    'ui_highlight',                 # Currently selected element highlight
-    'ui_dropdown_arrow',            # Dropdown menu arrow indicator
-    'ui_checkbox_empty',            # Unchecked checkbox
-    'ui_checkbox_filled',           # Checked checkbox
-    'ui_slider',                    # Slider control element
-    
-    # Main HUD Elements (10-24)
-    'hud_compass',                 # Top compass
-    'hud_hotbar',                  # Bottom hotbar
-    'hud_crosshair',               # Aiming crosshair
-    'hud_interaction_prompt',      # "Press E to interact" text
-    'hud_whistle_wheel',           # Dino whistle command wheel
-    'hud_emote_wheel',             # Player emote wheel
-    'hud_quickchat_wheel',         # Quick chat wheel
-    'hud_extended_ui_toggle',      # Toggle for extended UI
-    'hud_chat_box',                # Chat message display area
-    'hud_chat_input',              # Chat text input field
-    'hud_tribe_log_popup',         # Tribe log popup notification
-    'hud_gps_coordinates',         # GPS coordinates display
-    'hud_temperature_display',     # Current temperature display
-    'hud_active_buffs',            # Active status effects/buffs
-    'hud_active_debuffs',          # Active negative effects/debuffs
-    
-    # Status Indicators (25-49)
-    'status_health_low',           # Health bar when low (critical)
-    'status_health_medium',        # Health bar when medium
-    'status_health_full',          # Health bar when full/high
-    'status_stamina_low',          # Stamina bar when low
-    'status_stamina_medium',       # Stamina bar when medium
-    'status_stamina_full',         # Stamina bar when full
-    'status_food_low',             # Food bar when low
-    'status_food_medium',          # Food bar when medium
-    'status_food_full',            # Food bar when full
-    'status_water_low',            # Water bar when low
-    'status_water_medium',         # Water bar when medium
-    'status_water_full',           # Water bar when full
-    'status_weight_low',           # Weight when low (mostly empty)
-    'status_weight_medium',        # Weight when medium
-    'status_weight_heavy',         # Weight when high/encumbered
-    'status_torpor_low',           # Torpidity bar when low
-    'status_torpor_medium',        # Torpidity bar when medium
-    'status_torpor_high',          # Torpidity bar when high
-    'status_xp_gained',            # XP gain popup/notification
-    'status_level_up_available',   # Level up indicator
-    'status_effect_icons',         # Status effect icons
-    'status_oxygen_low',           # Oxygen bar when low
-    'status_oxygen_medium',        # Oxygen bar when medium
-    'status_oxygen_full',          # Oxygen bar when full
-    'status_fortitude_indicator',  # Fortitude status indicator
-    
-    # Alert Messages (50-69)
-    'alert_starvation',            # Starvation warning
-    'alert_dehydration',           # Dehydration warning
-    'alert_encumbered',            # Too heavy/encumbered warning
-    'alert_too_hot',               # Temperature too hot warning
-    'alert_too_cold',              # Temperature too cold warning
-    'alert_level_up',              # Level up notification
-    'alert_tribe_message',         # Tribe notification
-    'alert_death_message',         # Death screen text
-    'alert_taming_complete',       # Taming completed notification
-    'alert_insufficient_engrams',  # Not enough engram points
-    'alert_structure_blocked',     # Structure placement blocked
-    'alert_enemy_player_nearby',   # Enemy player nearby warning
-    'alert_server_message',        # Server announcement
-    'alert_disconnection_warning', # Server disconnection warning
-    'alert_item_broken',           # Item broken notification
-    'alert_creature_starving',     # Creature starving warning
-    'alert_creature_dying',        # Creature low health warning
-    'alert_imprint_available',     # Imprinting available notification
-    'alert_gasoline_low',          # Generator low fuel warning
-    'alert_element_low',           # Tek structure low element warning
-    
-    # Player Inventory - Left Side (70-99)
-    'player_inventory_title',      # "Inventory" title text
-    'player_inventory_slot_empty', # Empty inventory slot
-    'player_inventory_slot_filled', # Filled inventory slot
-    'player_item_icon',            # Item in player inventory
-    'player_item_stack_count',     # Stack count number
-    'player_item_durability_high', # Item durability bar (high)
-    'player_item_durability_med',  # Item durability bar (medium)
-    'player_item_durability_low',  # Item durability bar (low/critical)
-    'player_search_bar',           # Inventory search field
-    'player_weight_current',       # Current weight number
-    'player_weight_max',           # Maximum weight number
-    'player_weight_slider',        # Weight slider/visual indicator
-    'player_transfer_all_button',  # Transfer all items button (right arrow)
-    'player_drop_item_button',     # Drop item button
-    'player_character_model',      # 3D character model
-    'player_armor_slot_head',      # Head armor slot
-    'player_armor_slot_chest',     # Chest armor slot
-    'player_armor_slot_gloves',    # Gloves armor slot
-    'player_armor_slot_legs',      # Legs armor slot
-    'player_armor_slot_feet',      # Feet armor slot
-    'player_armor_slot_shield',    # Shield slot
-    'player_quick_bar_slot',       # Hotbar quick slot assignment
-    'player_sort_button',          # Sort inventory button
-    'player_filter_button',        # Filter inventory button
-    'player_folder_tab',           # Folder/category tab
-    'player_folder_item_count',    # Item count in folder
-    'player_blueprint_icon',       # Blueprint icon overlay
-    'player_item_equipped_marker', # Equipped item indicator
-    'player_item_favorite_marker', # Favorited item indicator
-    'player_quick_access_bar',     # Quick access bar
-]
-
-# The list continues with all the other categories as in our enhanced class set
-# Since the full list is very long (550+ classes), I'm truncating it here
-# In the actual file, you'd include the COMPLETE list from the ark_ui_classes.py file
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.ark_ui_classes import ARK_UI_CLASSES, generate_data_yaml
 
 def create_directory(directory):
     """Create directory if it doesn't exist."""
@@ -140,7 +27,7 @@ def split_dataset(source_path, dataset_path, train_ratio=0.8):
     
     Args:
         source_path: Path containing images and labels (from Roboflow or LabelImg)
-        dataset_path: Path for the organized YOLOv8 dataset
+        dataset_path: Path for the organized YOLOv11 dataset
         train_ratio: Portion of data to use for training (0.8 = 80% train, 20% val)
     """
     # Create directory structure
@@ -258,42 +145,12 @@ def copy_dataset_file(img_path, label_path, dataset_path, split):
         print(f"Error copying files: {e}")
         return False
 
-def create_data_yaml(dataset_path, classes, yaml_path):
-    """
-    Create the data.yaml file required by YOLOv8.
-    
-    Args:
-        dataset_path: Path to the dataset
-        classes: List of class names
-        yaml_path: Path to save the yaml file
-    """
-    # Create class dictionary
-    class_dict = {i: name for i, name in enumerate(classes)}
-    
-    # Create yaml content
-    data = {
-        'path': os.path.abspath(dataset_path),
-        'train': os.path.join('train', 'images'),
-        'val': os.path.join('val', 'images'),
-        'names': class_dict
-    }
-    
-    # Create directory if it doesn't exist
-    os.makedirs(os.path.dirname(yaml_path), exist_ok=True)
-    
-    # Write yaml file
-    with open(yaml_path, 'w') as f:
-        yaml.dump(data, f, sort_keys=False)
-    
-    print(f"Created data.yaml at {yaml_path}")
-    return True
-
 def verify_dataset(dataset_path):
     """
     Verify dataset integrity.
     
     Args:
-        dataset_path: Path to the YOLOv8 dataset
+        dataset_path: Path to the YOLOv11 dataset
         
     Returns:
         dict: Dataset statistics
@@ -376,7 +233,7 @@ def verify_dataset(dataset_path):
     return stats
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prepare dataset for YOLOv8 training")
+    parser = argparse.ArgumentParser(description="Prepare dataset for YOLOv11 training")
     parser.add_argument("--source", "-s", default="dataset", help="Source directory with images and labels")
     parser.add_argument("--output", "-o", default="dataset_yolo", help="Output directory for organized dataset")
     parser.add_argument("--train-ratio", "-t", type=float, default=0.8, help="Training data ratio (0.8 = 80% train, 20% val)")
@@ -386,7 +243,8 @@ if __name__ == "__main__":
     
     # Process the dataset
     if split_dataset(args.source, args.output, args.train_ratio):
-        create_data_yaml(args.output, ARK_UI_CLASSES, args.config)
+        # Generate data.yaml using the central function
+        generate_data_yaml(args.output, args.config)
         
         # Verify dataset
         stats = verify_dataset(args.output)
@@ -406,6 +264,6 @@ if __name__ == "__main__":
         if stats['empty_labels']:
             print(f"\nWarning: {len(stats['empty_labels'])} empty label files detected.")
         
-        print(f"\nNext step: Run 'python 4_train_model.py' to start training your model.")
+        print(f"\nNext step: Run 'python training/4_train_model.py' to start training your model.")
     else:
         print("\nError: Dataset preparation failed. Please check your source directory.")

@@ -1,0 +1,9 @@
+path: ./dataset_yolo  # Dataset root directory
+train: train/images   # Train images (relative to 'path')
+val: val/images       # Val images (relative to 'path')
+
+# Class names
+names:
+
+  0: entity_weight_max 
+  1: player_quick_bar_slot

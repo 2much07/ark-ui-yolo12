@@ -1,5 +1,5 @@
 """
-Train YOLOv8 model for ARK UI Detection with enhanced support for state-specific UI elements.
+Train YOLOv11 model for ARK UI Detection.
 """
 import os
 import yaml
@@ -19,7 +19,7 @@ def load_config(config_path):
 
 def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     """
-    Train YOLOv8 model for ARK UI detection.
+    Train YOLOv11 model for ARK UI detection.
     
     Args:
         data_yaml: Path to data.yaml
@@ -30,8 +30,8 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     # Load model configuration
     config = load_config(model_config)
     
-    # Use specified or default model
-    model_path = pretrained_weights if pretrained_weights else config.get('model', 'yolov8s.pt')
+    # Use specified or default model (updated to YOLOv11)
+    model_path = pretrained_weights if pretrained_weights else config.get('model', 'yolo11n.pt')
     
     # Create run name with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -54,10 +54,10 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     
     # Recommend larger model for large class counts
     if pretrained_weights is None and num_classes > 300:
-        model_size = model_path.split('yolov8')[1].split('.')[0]
-        if model_size == 's' or model_size == 'n' or model_size == '':
+        model_size = model_path.split('yolo11')[1].split('.')[0]
+        if model_size == 'n' or model_size == '':
             print("WARNING: Large class set detected. Consider using a larger model for better performance.")
-            print("For example: yolov8m.pt or yolov8l.pt instead of yolov8s.pt")
+            print("For example: yolo11m.pt or yolo11l.pt instead of yolo11n.pt")
     
     # Load model
     model = YOLO(model_path)
@@ -105,7 +105,8 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
             train_args[param] = config[param]
     
     # For UI state detection, minimize color and position augmentations
-    if any('status_' in class_name for class_name in data_config['names'].values()):
+    class_names = data_config['names']
+    if any('status_' in class_name for class_name in class_names.values()):
         print("State-specific UI classes detected. Adjusting augmentation parameters...")
         
         # Fine-tune augmentations for state detection
@@ -125,8 +126,8 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     print(f"Classes: {num_classes}")
     
     # Check for state-specific classes
-    state_classes = sum(1 for name in data_config['names'].values() if any(x in name for x in 
-                                                            ['_low', '_medium', '_full', '_active', '_inactive']))
+    state_classes = sum(1 for name in class_names.values() if any(x in name for x in 
+                                                        ['_low', '_medium', '_full', '_active', '_inactive']))
     if state_classes > 0:
         print(f"State-specific classes: {state_classes}")
     
@@ -161,7 +162,7 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         return None
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train YOLOv8 for ARK UI Detection")
+    parser = argparse.ArgumentParser(description="Train YOLOv11 for ARK UI Detection")
     parser.add_argument("--data", "-d", default="config/ark_ui_data.yaml", help="Path to data.yaml")
     parser.add_argument("--config", "-c", default="config/model_config.yaml", help="Path to model configuration")
     parser.add_argument("--output", "-o", default="runs", help="Output directory")
@@ -190,7 +191,7 @@ if __name__ == "__main__":
     # If config file doesn't exist, create it with default values
     if not os.path.exists(args.config):
         default_config = {
-            'model': 'yolov8s.pt',
+            'model': 'yolo11n.pt',  # Updated to YOLOv11
             'epochs': 100,
             'batch': 16,
             'imgsz': 640,
@@ -230,6 +231,6 @@ if __name__ == "__main__":
     best_model_path = train_model(args.data, args.config, args.output, args.weights)
     
     if best_model_path:
-        print(f"\nNext step: Run 'python training/5_evaluate_model.py --weights {best_model_path}' to evaluate your model.")
+        print(f"\nNext step: Run 'python 5_evaluate_model.py --weights {best_model_path}' to evaluate your model.")
     else:
         print("\nTraining failed. Please check error messages above.")

@@ -1,5 +1,5 @@
 """
-Update YOLOv8 model for ARK UI Detection with new data.
+Update YOLOv11 model for ARK UI Detection with new data.
 This script allows updating an existing model with new data or adding new classes,
 with special support for upgrading to state-specific UI detection.
 """
