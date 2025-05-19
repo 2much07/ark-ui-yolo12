@@ -1,0 +1,27 @@
+news class;
+bp_item_cryopod_available_selected
+bp_item_tek_replicator_available
+bp_item_tek_replicator
+
+inventory_item_saddle_primitive_velona
+inventory_item_saddle_primitive_velona
+
+
+tab_inventory_left_active
+tab_inventory_left_active
+tab_inventory_rigth_inactive
+tab_inventory_right_inactive
+
+tab_crafting_left_active
+tab_crafting_left_active
+tab_crafting_rigth_inactive
+tab_crafting_right_inactive
+
+tab_tribute_left_active
+tab_tribute_left_active
+tab_tribute_rigth_inactive
+tab_tribute_right_inactive
+
+
+tab_creatures_rigth_inactive
+tab_creatures_right_inactive
