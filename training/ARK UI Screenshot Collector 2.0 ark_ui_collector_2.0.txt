@@ -1,0 +1,72 @@
+Key Features of the New Collector:
+
+Captures Only the ARK Game Window
+
+Automatically detects the ARK: Survival Ascended window
+Let's you manually select just the game area with F8
+Ignores everything outside the game window
+
+
+Easy Navigation Through Categories and UI Elements
+
+Organizes UI elements into logical categories (HUD, Inventory, Crafting, etc.)
+Use F1/F2 to navigate between categories
+Use F3/F4 to navigate between specific UI elements
+
+
+Full Control Over Screenshots
+
+Press F5 to take a screenshot of the current UI element
+Screenshots are organized in folders by category and element type
+See a counter of how many screenshots you've taken for each element
+
+
+Focus Mode
+
+Toggle overlay transparency with F6
+Makes it easier to see the game while taking screenshots
+
+
+CVAT Export
+
+Automatically exports to CVAT format when you exit
+Can also manually export anytime with F7
+
+
+Overlay Window
+
+Shows current category, element, and screenshot count
+Can be moved anywhere on screen
+Becomes transparent in focus mode
+
+
+
+How to Use This Script:
+
+Installation: Make sure you have the required packages:
+bashpip install keyboard mss numpy opencv-python tkinter pywin32
+
+Run the Script:
+bashpython training/ark_ui_collector_2.0.py --class-collection all
+
+Select the ARK Window:
+
+The script will try to automatically find the ARK window
+You can adjust it by dragging the green rectangle
+Press Enter to confirm or draw a new selection
+
+
+Take Screenshots:
+
+Use F1/F2 to select a category (like "HUD Elements")
+Use F3/F4 to select a specific UI element (like "hud_healthbar")
+Press F5 to take a screenshot of that element
+See the counter increase as you take more screenshots
+
+
+Additional Controls:
+
+F6: Toggle focus mode (makes the overlay more transparent)
+F7: Export to CVAT format manually
+F8: Reselect the game window if needed
+F10: Exit and automatically export to CVAT

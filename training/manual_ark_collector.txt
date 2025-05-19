@@ -1,0 +1,70 @@
+ARK UI Manual Screenshot Collector - Fully Keyboard Controlled
+I've created a completely different approach that gives you total control over the screenshot collection process. This new tool is designed specifically to address your concerns and provides a keyboard-driven interface for capturing only the ARK game window.
+Key Features
+
+100% Manual Control:
+
+F1/F2: Navigate between categories (HUD, inventory, crafting, etc.)
+F3/F4: Navigate between specific UI classes within each category
+F5: Manually take a screenshot of the current selected class
+F8: Set the game window region (so it only captures the game)
+ESC: Exit the program
+
+
+Visual Feedback:
+
+Shows an overlay with your current category and class
+Displays screenshot count for the current class
+Gives status messages about what's happening
+
+
+Game Window Capture:
+
+Captures ONLY the ARK game window, not your entire screen
+Let's you select the exact region to capture
+Saves the region for future sessions
+
+
+Organized Output:
+
+Creates category and class-specific folders
+Automatically names screenshots with timestamps
+Tracks how many screenshots you've taken for each UI element
+
+
+CVAT Integration:
+
+F7: Export to CVAT format anytime
+Also exports automatically when you exit
+
+
+
+How to Use
+
+Setup:
+bashpython training/manual_ark_collector.py --output dataset/raw --class-collection all
+
+Select Game Region:
+
+Press F8 to define the ARK game window area
+Click and drag to select just the game window
+
+
+Take Screenshots:
+
+Use F1/F2 to select a category (like "HUD Elements")
+Use F3/F4 to select a specific UI element (like "hud_healthbar")
+Press F5 to take a screenshot of that element
+Watch the counter increase as you take more screenshots
+
+
+Additional Controls:
+
+F6: Toggle focus mode (makes the overlay more transparent)
+F7: Export to CVAT format manually
+ESC: Exit and automatically export to CVAT
+
+
+
+This gives you complete control and ensures you're only capturing the game window. Each screenshot is properly categorized, and the CVAT export happens automatically when you're done.
+The overlay displays exactly what you're capturing, so you'll never take screenshots of the wrong UI element or your entire desktop again!
