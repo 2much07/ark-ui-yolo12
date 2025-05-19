@@ -1,4 +1,4 @@
-ultralytics>=11.0.0
+git+https://github.com/sunsmarterjie/yolov12.git
 torch>=2.0.0
 torchvision>=0.15.0
 opencv-python>=4.7.0

@@ -1,5 +1,5 @@
 """
-Train YOLOv11 model for ARK UI Detection.
+Train YOLOv12 model for ARK UI Detection.
 """
 import os
 import yaml
@@ -19,7 +19,7 @@ def load_config(config_path):
 
 def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     """
-    Train YOLOv11 model for ARK UI detection.
+    Train YOLOv12 model for ARK UI detection.
     
     Args:
         data_yaml: Path to data.yaml
@@ -30,8 +30,8 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     # Load model configuration
     config = load_config(model_config)
     
-    # Use specified or default model (updated to YOLOv11)
-    model_path = pretrained_weights if pretrained_weights else config.get('model', 'yolo11n.pt')
+    # Use specified or default model (updated to YOLOv12)
+    model_path = pretrained_weights if pretrained_weights else config.get('model', 'yolov12n.pt')
     
     # Create run name with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -54,10 +54,10 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     
     # Recommend larger model for large class counts
     if pretrained_weights is None and num_classes > 300:
-        model_size = model_path.split('yolo11')[1].split('.')[0]
+        model_size = model_path.split('yolov12')[1].split('.')[0] if 'yolov12' in model_path else ''
         if model_size == 'n' or model_size == '':
             print("WARNING: Large class set detected. Consider using a larger model for better performance.")
-            print("For example: yolo11m.pt or yolo11l.pt instead of yolo11n.pt")
+            print("For example: yolov12m.pt or yolov12l.pt instead of yolov12n.pt")
     
     # Load model
     model = YOLO(model_path)
@@ -83,7 +83,10 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         'pretrained': True,
         'verbose': True,
         'device': 0 if config.get('device', None) is None else config.get('device'),
-        'workers': config.get('workers', 8)
+        'workers': config.get('workers', 8),
+        # YOLOv12 specific parameters
+        'attention': config.get('attention', 'flash'),  # Use FlashAttention
+        'v12_head': config.get('v12_head', True)        # Use YOLOv12 detection head
     }
     
     # Add more frequent checkpoints for large class sets
@@ -124,6 +127,8 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
     print(f"Image size: {train_args['imgsz']}")
     print(f"Device: {train_args['device']}")
     print(f"Classes: {num_classes}")
+    print(f"Attention: {train_args['attention']}")
+    print(f"YOLOv12 head: {train_args['v12_head']}")
     
     # Check for state-specific classes
     state_classes = sum(1 for name in class_names.values() if any(x in name for x in 
@@ -162,7 +167,7 @@ def train_model(data_yaml, model_config, output_dir, pretrained_weights=None):
         return None
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train YOLOv11 for ARK UI Detection")
+    parser = argparse.ArgumentParser(description="Train YOLOv12 for ARK UI Detection")
     parser.add_argument("--data", "-d", default="config/ark_ui_data.yaml", help="Path to data.yaml")
     parser.add_argument("--config", "-c", default="config/model_config.yaml", help="Path to model configuration")
     parser.add_argument("--output", "-o", default="runs", help="Output directory")
@@ -191,7 +196,7 @@ if __name__ == "__main__":
     # If config file doesn't exist, create it with default values
     if not os.path.exists(args.config):
         default_config = {
-            'model': 'yolo11n.pt',  # Updated to YOLOv11
+            'model': 'yolov12n.pt',  # Updated to YOLOv12
             'epochs': 100,
             'batch': 16,
             'imgsz': 640,
@@ -219,7 +224,9 @@ if __name__ == "__main__":
             'fliplr': 0.0,
             'hsv_h': 0.015,
             'hsv_s': 0.2,
-            'hsv_v': 0.2
+            'hsv_v': 0.2,
+            'attention': 'flash',  # YOLOv12 specific
+            'v12_head': True       # YOLOv12 specific
         }
         
         os.makedirs(os.path.dirname(args.config), exist_ok=True)

@@ -1,6 +1,6 @@
 """
 Real-time UI detection visualizer for ARK: Survival Ascended.
-This script shows what the model is detecting in real-time to help debug and validate.
+This script shows what the YOLOv12 model is detecting in real-time to help debug and validate.
 """
 import os
 import time
@@ -36,16 +36,16 @@ def generate_colors(num_classes):
 
 def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_fps=True, delay=0.05):
     """
-    Perform real-time UI detection on the game screen.
+    Perform real-time UI detection on the game screen with YOLOv12.
     
     Args:
-        weights_path: Path to trained model weights
+        weights_path: Path to trained YOLOv12 model weights
         data_yaml: Path to data.yaml file (optional)
         conf_threshold: Confidence threshold for detections
         show_fps: Whether to display FPS
         delay: Delay between frames in seconds
     """
-    print("\n=== ARK UI Real-time Detector ===")
+    print("\n=== ARK UI Real-time Detector with YOLOv12 ===")
     print(f"Model: {weights_path}")
     print(f"Confidence threshold: {conf_threshold}")
     print("Press 'q' to quit, 'c' to capture screenshot")
@@ -54,6 +54,11 @@ def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_f
     
     # Load model
     model = YOLO(weights_path)
+    
+    # Check if using YOLOv12
+    is_v12 = hasattr(model.model, 'is_v12') and model.model.is_v12
+    if is_v12:
+        print("Using YOLOv12 advanced features for better detection")
     
     # Load class names
     class_names = {}
@@ -92,7 +97,7 @@ def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_f
                 display_width = int(frame.shape[1] * (display_height / frame.shape[0]))
                 display_frame = cv2.resize(frame, (display_width, display_height))
                 
-                # Perform detection
+                # Perform detection with YOLOv12
                 results = model.predict(source=frame, conf=conf_threshold)
                 
                 # Process results
@@ -141,6 +146,11 @@ def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_f
                 cv2.putText(display_frame, f"Conf: {conf_threshold:.2f}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX,
                           1, (0, 255, 0), 2)
                 
+                # Display YOLOv12 indicator
+                if is_v12:
+                    cv2.putText(display_frame, "YOLOv12", (display_width - 120, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                              1, (0, 255, 255), 2)
+                
                 # Display detection counts
                 y_pos = 110
                 for cls_name, count in sorted(detection_counts.items()):
@@ -149,7 +159,7 @@ def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_f
                     y_pos += 30
                 
                 # Display the result
-                cv2.imshow('ARK UI Detection', display_frame)
+                cv2.imshow('ARK UI Detection (YOLOv12)', display_frame)
                 
                 # Process key presses
                 key = cv2.waitKey(1) & 0xFF
@@ -187,8 +197,8 @@ def real_time_detection(weights_path, data_yaml=None, conf_threshold=0.4, show_f
             print("Real-time detection stopped.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Real-time ARK UI Detection Visualizer")
-    parser.add_argument("--weights", "-w", required=True, help="Path to trained weights")
+    parser = argparse.ArgumentParser(description="Real-time ARK UI Detection Visualizer with YOLOv12")
+    parser.add_argument("--weights", "-w", required=True, help="Path to trained YOLOv12 weights")
     parser.add_argument("--data", "-d", default=None, help="Path to data.yaml")
     parser.add_argument("--conf", "-c", type=float, default=0.4, help="Confidence threshold")
     parser.add_argument("--delay", type=float, default=0.05, help="Delay between frames in seconds")

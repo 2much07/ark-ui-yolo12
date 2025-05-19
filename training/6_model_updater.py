@@ -1,5 +1,5 @@
 """
-Update YOLOv11 model for ARK UI Detection with new data.
+Update YOLOv12 model for ARK UI Detection with new data.
 This script allows updating an existing model with new data or adding new classes,
 with special support for upgrading to state-specific UI detection.
 """
@@ -35,9 +35,12 @@ def update_model(weights_path, data_yaml, output_dir, epochs=50, batch_size=16):
     print(f"Batch size: {batch_size}")
     print("====================================\n")
     
+    """
+    Update model to recognize state-specific UI elements.
+    """
     # Create run name with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    run_name = f"ark_ui_detector_update_{timestamp}"
+    run_name = f"ark_ui_detector_state_specific_{timestamp}"
     
     # Load model
     model = YOLO(weights_path)
@@ -51,20 +54,24 @@ def update_model(weights_path, data_yaml, output_dir, epochs=50, batch_size=16):
         'name': run_name,
         'project': output_dir,
         'exist_ok': True,
-        'resume': True,  # Continue from existing weights
+        'patience': 30,  # Increased patience for learning complex state differences
+        'mosaic': 0.0,   # Disable mosaic for UI state detection
+        'mixup': 0.0,    # Disable mixup for UI state detection
+        'hsv_h': 0.01,   # Minimal hue augmentation to preserve UI colors
+        'hsv_s': 0.1,    # Minimal saturation augmentation
+        'hsv_v': 0.1,    # Minimal value augmentation
+        'translate': 0.05, # Minimal translation
+        'scale': 0.05,   # Minimal scaling
+        'fliplr': 0.0,   # No flipping for UI
+        'flipud': 0.0,   # No flipping for UI
         
-        # Reduced augmentation for fine-tuning
-        'mosaic': 0.0,
-        'mixup': 0.0,
-        'degrees': 0.0,
-        'translate': 0.1,
-        'scale': 0.1,
-        'fliplr': 0.0,
-        'flipud': 0.0
+        # YOLOv12 specific parameters
+        'attention': 'flash',  # Use FlashAttention on your 3090 Ti
+        'v12_head': True       # Use YOLOv12 detection head
     }
     
     # Start training
-    print("Starting model update...")
+    print("Starting state-specific model update...")
     results = model.train(**train_args)
     
     # Get best model path

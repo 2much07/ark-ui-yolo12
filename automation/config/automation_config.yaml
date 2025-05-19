@@ -1,4 +1,4 @@
-# ARK: Survival Ascended UI Automation Configuration
+# ARK: Survival Ascended UI Automation Configuration for YOLOv12
 
 # Detection settings
 detection:
@@ -7,6 +7,10 @@ detection:
   cooldown: 0.5               # Seconds between actions
   background_detection: false # Whether to run detection in background
   detection_interval: 0.2     # Seconds between background detections
+  
+  # YOLOv12 specific settings
+  use_flash_attention: true   # Use FlashAttention for better performance with YOLOv12
+  v12_head: true              # Use YOLOv12 detection head
 
 # Game settings
 game:
@@ -43,6 +47,13 @@ ocr:
   engine: 'auto'              # OCR engine to use (auto, tesseract, easyocr)
   preprocess_type: 'ark_ui'   # Image preprocessing type for OCR
 
+# Model settings
+model:
+  version: 'yolov12'          # Model version (yolov11, yolov12)
+  size: 'n'                   # Model size (n, s, m, l, x)
+  attention: 'flash'          # Attention type for YOLOv12 (flash, default)
+  hardware_acceleration: true # Enable hardware acceleration for inference
+
 # Scenarios
 scenarios:
   taming:
@@ -66,3 +77,8 @@ advanced:
   debug_mode: false           # Enable debug mode
   save_screenshots: false     # Save screenshots during automation
   screenshot_dir: "debug_screenshots" # Directory for debug screenshots
+  
+  # YOLOv12 advanced settings
+  batch_size: 1               # Batch size for inference
+  half_precision: true        # Use FP16 (half precision) for faster inference
+  use_tensorrt: false         # Use TensorRT optimization (requires setup)

@@ -38,11 +38,18 @@ class ArkUIAutomation:
         Initialize the ARK UI automation system.
         
         Args:
-            model_path: Path to trained YOLOv8 model
+            model_path: Path to trained YOLOv12 model
             config_path: Path to automation configuration file (optional)
             confidence: Default confidence threshold for detections
         """
         self.model = YOLO(model_path)
+        
+        # Check if using YOLOv12
+        if hasattr(self.model.model, 'is_v12') and self.model.model.is_v12:
+            print("Using YOLOv12 model with advanced features")
+        else:
+            print("Using YOLOv11 or older model")
+            
         self.confidence = confidence
         self.screen_width, self.screen_height = pyautogui.size()
         self.last_action_time = time.time()

@@ -72,7 +72,7 @@ git commit -m "%commitMsg%"
 REM Set the remote repository URL
 echo Setting remote repository URL...
 git remote remove origin 2>nul
-git remote add origin https://github.com/2much07/ark-ui-master.git
+git remote add origin https://github.com/2much07/ark-ui-yolo12.git
 
 REM Rename the branch to main (if necessary)
 git branch -M main

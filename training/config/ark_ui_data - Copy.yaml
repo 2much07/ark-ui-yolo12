@@ -607,7 +607,7 @@ def get_class_dict():
 
 def generate_data_yaml(dataset_path, output_path):
     """
-    Generate the data.yaml file for YOLOv12 training.
+    Generate the data.yaml file for YOLOv11 training.
     
     Args:
         dataset_path: Path to the dataset directory

@@ -2,6 +2,7 @@
 Enhanced Screenshot Collector for ARK: Survival Ascended UI Detection.
 This script automatically captures screenshots of the game at defined intervals,
 with specific support for capturing different UI states and inventory types.
+Optimized for collecting training data for YOLOv12 UI detection models.
 """
 import os
 import time

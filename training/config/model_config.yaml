@@ -1,5 +1,5 @@
-# YOLOv11 Configuration for ARK UI Detection
-model: yolo11n.pt  # Use YOLOv11 nano model as base
+# YOLOv12 Configuration for ARK UI Detection
+model: yolov12n.pt  # Use YOLOv12 nano model as base
 
 # Training parameters
 epochs: 100
@@ -15,6 +15,10 @@ warmup_epochs: 3  # Warmup epochs
 warmup_momentum: 0.8  # Warmup initial momentum
 warmup_bias_lr: 0.1  # Warmup initial bias lr
 save_period: 10  # Save checkpoint every X epochs
+
+# YOLOv12-specific parameters
+attention: flash  # Use FlashAttention for better performance on your RTX 3090 Ti
+v12_head: True  # Use YOLOv12 detection head
 
 # Augmentation options - optimized for UI detection
 mosaic: 0.0  # Disable mosaic for UI detection
@@ -32,5 +36,5 @@ hsv_s: 0.2  # HSV-Saturation augmentation
 hsv_v: 0.2  # HSV-Value augmentation
 
 # Hardware settings
-device: 0  # Use first GPU, set to 'cpu' for CPU training
+device: 0  # Use GPU
 workers: 8  # Number of worker threads

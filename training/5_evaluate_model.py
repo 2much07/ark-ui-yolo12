@@ -26,16 +26,9 @@ def load_classes(data_yaml):
 
 def evaluate_model(weights_path, data_yaml, validation_images=None, conf_threshold=0.25, iou_threshold=0.7):
     """
-    Evaluate YOLOv11 model on validation images.
-    
-    Args:
-        weights_path: Path to trained model weights
-        data_yaml: Path to data.yaml file
-        validation_images: Path to validation images (optional)
-        conf_threshold: Confidence threshold for detections
-        iou_threshold: IoU threshold for NMS
+    Evaluate YOLOv12 model on validation images.
     """
-    print("\n=== ARK UI Detector Evaluation ===")
+    print("\n=== ARK UI Detector Evaluation (YOLOv12) ===")
     print(f"Model: {weights_path}")
     print(f"Data: {data_yaml}")
     print(f"Confidence threshold: {conf_threshold}")
@@ -44,6 +37,13 @@ def evaluate_model(weights_path, data_yaml, validation_images=None, conf_thresho
     
     # Load model
     model = YOLO(weights_path)
+    
+    # Check if using YOLOv12
+    is_v12 = hasattr(model.model, 'is_v12') and model.model.is_v12
+    if is_v12:
+        print("Evaluating YOLOv12 model with advanced features")
+    else:
+        print("Evaluating YOLOv11 or older model")
     
     # Load class names
     class_names = load_classes(data_yaml)

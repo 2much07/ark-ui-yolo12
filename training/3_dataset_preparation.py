@@ -1,5 +1,5 @@
 """
-Dataset preparation for ARK UI Detection.
+Dataset preparation for ARK UI Detection with YOLOv12.
 Uses the central class definitions from utils/ark_ui_classes.py
 """
 import os
@@ -27,7 +27,7 @@ def split_dataset(source_path, dataset_path, train_ratio=0.8):
     
     Args:
         source_path: Path containing images and labels (from Roboflow or LabelImg)
-        dataset_path: Path for the organized YOLOv11 dataset
+        dataset_path: Path for the organized YOLOv12 dataset
         train_ratio: Portion of data to use for training (0.8 = 80% train, 20% val)
     """
     # Create directory structure
@@ -233,7 +233,7 @@ def verify_dataset(dataset_path):
     return stats
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prepare dataset for YOLOv11 training")
+    parser = argparse.ArgumentParser(description="Prepare dataset for YOLOv12 training")
     parser.add_argument("--source", "-s", default="dataset", help="Source directory with images and labels")
     parser.add_argument("--output", "-o", default="dataset_yolo", help="Output directory for organized dataset")
     parser.add_argument("--train-ratio", "-t", type=float, default=0.8, help="Training data ratio (0.8 = 80% train, 20% val)")
@@ -249,7 +249,7 @@ if __name__ == "__main__":
         # Verify dataset
         stats = verify_dataset(args.output)
         
-        print("\nDataset preparation complete! Your dataset is ready for training.")
+        print("\nDataset preparation complete! Your dataset is ready for YOLOv12 training.")
         print(f"- Training images: {stats['train_images']}")
         print(f"- Training labels: {stats['train_labels']}")
         print(f"- Validation images: {stats['val_images']}")
@@ -264,6 +264,6 @@ if __name__ == "__main__":
         if stats['empty_labels']:
             print(f"\nWarning: {len(stats['empty_labels'])} empty label files detected.")
         
-        print(f"\nNext step: Run 'python training/4_train_model.py' to start training your model.")
+        print(f"\nNext step: Run 'python training/4_train_model.py' to start training your YOLOv12 model.")
     else:
         print("\nError: Dataset preparation failed. Please check your source directory.")

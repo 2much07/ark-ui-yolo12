@@ -1,5 +1,5 @@
 """
-Main launcher for ARK UI Automation System.
+Main launcher for ARK UI Automation System with YOLOv12 support.
 This script provides a unified interface to run the various automation examples.
 """
 import os
@@ -53,8 +53,8 @@ def load_script(script_name):
 
 def list_available_scripts():
     """List all available automation scripts."""
-    print("\nAvailable Automation Scripts:")
-    print("-----------------------------")
+    print("\nAvailable Automation Scripts (YOLOv12 Compatible):")
+    print("--------------------------------------------")
     
     # List built-in examples
     examples_dir = 'examples'
@@ -85,9 +85,9 @@ def list_available_scripts():
     print("\nExample: python run_automation.py --script inventory_manager --weights runs/ark_ui_detector/weights/best.pt")
 
 def main():
-    parser = argparse.ArgumentParser(description="ARK UI Automation System Launcher")
+    parser = argparse.ArgumentParser(description="ARK UI Automation System Launcher (YOLOv12 Compatible)")
     parser.add_argument("--script", "-s", help="Script to run")
-    parser.add_argument("--weights", "-w", help="Path to trained model weights")
+    parser.add_argument("--weights", "-w", help="Path to trained YOLOv12 model weights")
     parser.add_argument("--list", "-l", action="store_true", help="List available scripts")
     parser.add_argument("--visualize", "-v", action="store_true", help="Run detection visualizer")
     parser.add_argument("--confidence", "-c", type=float, default=0.4, help="Detection confidence threshold")
@@ -109,6 +109,7 @@ def main():
             # Import the detection visualizer directly
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
             from detection_visualizer import real_time_detection
+            logger.info("Starting YOLOv12 detection visualizer...")
             real_time_detection(args.weights, conf_threshold=args.confidence)
         except ImportError:
             logger.error("Failed to import detection_visualizer.py")
@@ -155,7 +156,7 @@ def main():
         sys.argv.extend(["--confidence", str(args.confidence)])
     
     # Run the script's main function
-    logger.info(f"Running script: {args.script}")
+    logger.info(f"Running script: {args.script} with YOLOv12 model")
     start_time = time.time()
     
     try:
